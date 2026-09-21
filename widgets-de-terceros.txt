@@ -1,0 +1,5 @@
+# Widgets de terceros instalados (se bajan de 'Obtener nuevos widgets')
+KdeControlStation
+luisbocanegra.panel.colorizer
+Plasma.Flex.Hub
+plasmusic-toolbar

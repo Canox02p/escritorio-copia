@@ -1,0 +1,175 @@
+[ColorEffects:Disabled]
+ChangeSelectionColor=
+Color=0,0,0
+ColorAmount=0
+ColorEffect=0
+ContrastAmount=0.65
+ContrastEffect=1
+Enable=
+IntensityAmount=0.1
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=56,56,65
+ColorAmount=0.025
+ColorEffect=2
+ContrastAmount=0.1
+ContrastEffect=2
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=13,14,19
+BackgroundNormal=29,29,34
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:Complementary]
+BackgroundAlternate=13,14,19
+BackgroundNormal=0,0,0
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=224,224,255
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:Header]
+BackgroundAlternate=0,0,0
+BackgroundNormal=19,19,24
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:Header][Inactive]
+BackgroundAlternate=61,66,121
+BackgroundNormal=19,19,24
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:Selection]
+BackgroundAlternate=13,14,19
+BackgroundNormal=189,194,255
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=38,43,97
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=147,0,10
+ForegroundNeutral=94,60,83
+ForegroundNormal=38,43,97
+ForegroundPositive=94,60,83
+ForegroundVisited=225,224,249
+
+[Colors:Tooltip]
+BackgroundAlternate=0,0,0
+BackgroundNormal=19,19,24
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:View]
+BackgroundAlternate=19,19,24
+BackgroundNormal=0,0,0
+DecorationFocus=224,224,255
+DecorationHover=38,43,97
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[Colors:Window]
+BackgroundAlternate=61,66,121
+BackgroundNormal=19,19,24
+DecorationFocus=189,194,255
+DecorationHover=189,194,255
+ForegroundActive=189,194,255
+ForegroundInactive=199,197,208
+ForegroundLink=197,196,221
+ForegroundNegative=255,180,171
+ForegroundNeutral=231,185,213
+ForegroundNormal=228,225,233
+ForegroundPositive=231,185,213
+ForegroundVisited=225,224,249
+
+[General]
+ColorScheme=noctalia
+ColorSchemeHash=962d56bf4ef41f3d0c36ba6438b97d18221b7b69
+Name=noctalia
+TerminalApplication=kitty
+
+[Icons]
+Theme=Papirus-Dark
+
+[KDE]
+LookAndFeelPackage=org.kde.breezedark.desktop
+contrast=4
+frameContrast=0.2
+
+[KFileDialog Settings]
+Allow Expansion=false
+Automatically select filename extension=true
+Breadcrumb Navigation=true
+Decoration position=2
+Show Full Path=false
+Show Inline Previews=true
+Show Preview=false
+Show Speedbar=true
+Show hidden files=false
+Sort by=Name
+Sort directories first=true
+Sort hidden files last=false
+Sort reversed=false
+Speedbar Width=148
+View Style=DetailTree
+
+[Sounds]
+Theme=freedesktop
+
+[WM]
+activeBackground=61,66,121
+activeBlend=224,224,255
+activeForeground=224,224,255
+inactiveBackground=0,0,0
+inactiveBlend=199,197,208
+inactiveForeground=199,197,208

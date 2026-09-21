@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Authors": [{ "Name": "hecho a medida" }],
+        "Description": "Como Breeze pero con los diálogos translúcidos, para el efecto cristal",
+        "Id": "cristal",
+        "License": "LGPL",
+        "Name": "Cristal"
+    },
+    "X-Plasma-API": "5.0"
+}

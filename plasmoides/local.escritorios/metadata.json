@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "Windows and Tasks",
+        "Description": "Números de tus escritorios virtuales con el actual resaltado",
+        "Icon": "virtual-desktops",
+        "Id": "local.escritorios",
+        "License": "GPL-2.0+",
+        "Name": "Escritorios numerados",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

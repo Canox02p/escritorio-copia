@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "System Information",
+        "Description": "Red, Bluetooth, audio, brillo, batería y sesión en un solo sitio",
+        "Icon": "preferences-system",
+        "Id": "local.centrocontrol",
+        "License": "GPL-2.0+",
+        "Name": "Centro de control",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

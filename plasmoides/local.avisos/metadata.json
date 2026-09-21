@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "System Information",
+        "Description": "Avisos y accesos rápidos en el borde derecho",
+        "Icon": "notifications",
+        "Id": "local.avisos",
+        "License": "GPL-2.0+",
+        "Name": "Centro de avisos",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

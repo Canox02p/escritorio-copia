@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "System Information",
+        "Description": "Notificaciones, calendario, música y fondos en un solo tablero",
+        "Icon": "view-list-details",
+        "Id": "local.dashboard",
+        "License": "GPL-2.0+",
+        "Name": "Tablero",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

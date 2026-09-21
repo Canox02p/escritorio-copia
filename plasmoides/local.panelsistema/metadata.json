@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "System Information",
+        "Description": "Rendimiento (CPU, RAM, GPU), batería y red",
+        "Icon": "utilities-system-monitor",
+        "Id": "local.panelsistema",
+        "License": "GPL-2.0+",
+        "Name": "Panel del sistema",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "Date and Time",
+        "Description": "La hora, grande y sola, para el centro del escritorio",
+        "Icon": "clock",
+        "Id": "local.relojcentral",
+        "License": "GPL-2.0+",
+        "Name": "Reloj central",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

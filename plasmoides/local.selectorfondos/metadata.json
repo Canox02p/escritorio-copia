@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "Utilities",
+        "Description": "Cambia tu fondo de pantalla (imágenes y videos) desde la barra",
+        "Icon": "preferences-desktop-wallpaper",
+        "Id": "local.selectorfondos",
+        "License": "GPL-2.0+",
+        "Name": "Selector de fondos",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

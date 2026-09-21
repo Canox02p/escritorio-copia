@@ -1,0 +1,15 @@
+[5a3e6e00-93ce-4fbe-b35b-82648bba4ef3]
+Description=Nuevas preferencias de las ventanas
+wmclassmatch=1
+
+[General]
+count=2
+rules=5a3e6e00-93ce-4fbe-b35b-82648bba4ef3,tablero-fondos-centrado
+
+[tablero-fondos-centrado]
+Description=Selector de fondos centrado
+placement=5
+placementrule=2
+wmclass=plasmawindowed
+wmclasscomplete=false
+wmclassmatch=1

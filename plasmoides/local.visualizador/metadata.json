@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Category": "Multimedia",
+        "Description": "Barras que se mueven con la música, con el progreso de la canción",
+        "Icon": "view-media-visualization",
+        "Id": "local.visualizador",
+        "License": "GPL-2.0+",
+        "Name": "Visualizador de música",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
