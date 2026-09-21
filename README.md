@@ -1,7 +1,10 @@
 # Respaldo de mi escritorio (KDE Plasma 6 · CachyOS)
 
 Todo lo que hace falta para dejar otro equipo con este mismo escritorio: los
-widgets hechos a medida, el estilo de Plasma y la configuración de los paneles.
+widgets hechos a medida (las barras), el estilo de Plasma, la configuración de
+los paneles, la **pantalla de bloqueo**, el **inicio de sesión (login)**, el
+cubo de escritorios con fondo difuminado y los servicios pequeños (audio
+Bluetooth y reinicio forzado).
 
 ## Qué hay aquí
 
@@ -9,7 +12,12 @@ widgets hechos a medida, el estilo de Plasma y la configuración de los paneles.
 |---|---|
 | `plasmoides/` | Los widgets propios (ver la tabla de abajo) |
 | `estilo/cristal/` | Estilo de Plasma propio: igual que el de serie pero con los **diálogos al 45%**, que es lo que da el efecto de cristal esmerilado a las ventanas de los widgets |
-| `config/` | Copia de los ajustes: paneles, atajos, reglas de ventanas, esquema de color |
+| `bloqueo/` | Pantalla de bloqueo propia (`local.bloqueo`) y el ajuste de KWin que la activa |
+| `login/` | Inicio de sesión: tema SDDM `cristal-cachy`, generado a partir de la pantalla de bloqueo |
+| `efectos/cube/` | Cubo de escritorios de KWin con tu fondo difuminado detrás |
+| `apagado/` | Reinicio/apagado forzado a los 10 s si una app lo frena (como en Windows) |
+| `audio/` | Cambia el sonido solo al conectar unos audífonos Bluetooth |
+| `config/` | Copia de los ajustes: paneles, atajos, reglas de ventanas, esquema de color, bloqueo (`kscreenlockerrc`) y el color elegido en el bloqueo (`bloqueo-colores`) |
 | `widgets-de-terceros.txt` | Los widgets que **no** son míos y hay que bajar de la tienda |
 | `instalar.sh` | Deja todo esto en un equipo nuevo |
 | `respaldar.sh` | Vuelve a volcar aquí el escritorio actual (ejecutar tras cada cambio) |
@@ -22,7 +30,7 @@ widgets hechos a medida, el estilo de Plasma y la configuración de los paneles.
 | `local.centrocontrol` | Arriba a la derecha | Volumen, Bluetooth, red, brillo de pantalla y teclado, batería y sesión. En la barra enseña internet, volumen, batería y apagado |
 | `local.avisos` | Borde derecho (se asoma al acercar el ratón a media altura) | Notificaciones con el dinosaurio cuando no hay nada, accesos rápidos (silencio, micrófono, no molestar, ajustes) y botones para vaciar avisos y abrir los fondos |
 | `local.panelsistema` | Arriba a la izquierda | Tira con CPU, GPU, RAM y temperatura; cada dato abre un administrador de tareas (procesos con CPU, GPU y memoria, y botón para finalizarlos) |
-| `local.selectorfondos` | Se abre desde el botón *Fondos* del centro de avisos | Cambia el fondo de pantalla: imágenes **y vídeos** |
+| `local.selectorfondos` | Se abre desde el botón *Fondos* del centro de avisos | Cambia el fondo de pantalla: imágenes **y vídeos**. Se abre a pantalla completa (tira de tarjetas inclinadas) con `contents/code/abrir.sh` |
 | `local.escritorios` | Barra lateral | Los números de escritorio, con la misma tipografía que el resto |
 | `local.relojcentral`, `local.visualizador` | Sin usar ahora mismo | Se quedan por si hacen falta |
 
@@ -31,9 +39,12 @@ widgets hechos a medida, el estilo de Plasma y la configuración de los paneles.
 Paquetes (Arch / CachyOS):
 
 ```sh
-sudo pacman -S imagemagick ffmpegthumbnailer curl upower python-numpy \
-               ttf-jetbrains-mono-nerd
+sudo pacman -S imagemagick ffmpegthumbnailer ffmpeg curl upower python-numpy \
+               ttf-jetbrains-mono-nerd layer-shell-qt qt6-declarative
 ```
+
+`layer-shell-qt` y `qml6` son para el selector de fondos a pantalla completa.
+El login necesita además `sddm` (lo instala su propio instalador).
 
 Y de KDE, que normalmente ya vienen: `plasma-desktop`, `plasma-workspace`,
 `plasma-pa` (audio), `plasma-nm` (redes), `bluedevil` (Bluetooth),
@@ -59,6 +70,71 @@ plasma-apply-desktoptheme cristal
 
 Antes de sobrescribir nada, el instalador guarda lo que tenías en
 `~/respaldo-antes-de-instalar-<fecha>/`.
+
+`instalar.sh` deja también en su sitio la pantalla de bloqueo, el cubo, el
+reinicio forzado y el audio Bluetooth (estos dos se activan solos). El login
+solo lo **copia**; hay que activarlo aparte, ver abajo.
+
+## Pantalla de bloqueo
+
+- Vive en `~/.local/share/plasma/shells/local.bloqueo/contents/lockscreen/`
+  (`LockScreenUi.qml`, `Tarjeta.qml`, `Medidor.qml`, `estado.sh`, `fondo.sh`).
+- Panel de cristal con tiempo, ficha del sistema, música, reloj, contraseña,
+  CPU/RAM/disco, batería y botones de sesión. El fondo es **el mismo del
+  escritorio** (`fondo.sh` lo lee del appletsrc; si es vídeo saca un fotograma)
+  y el color de acento se elige en la propia pantalla (se guarda en
+  `~/.config/bloqueo-colores`).
+- Se activa con `bloqueo/kwin-bloqueo.conf`, que se copia a
+  `~/.config/systemd/user/plasma-kwin_wayland.service.d/bloqueo.conf`
+  (pone `PLASMA_DEFAULT_SHELL=local.bloqueo` **solo para KWin**). Hace efecto
+  al volver a iniciar sesión. No poner esa variable en todo el sistema: el
+  escritorio cambiaría de shell.
+- Probarla sin bloquear:
+  `timeout 9 /usr/lib/kscreenlocker_greet --testing --shell local.bloqueo`
+- Quitarla: borrar ese `bloqueo.conf` y la carpeta `local.bloqueo`.
+
+## Inicio de sesión (login)
+
+- Es un tema de **SDDM** (`cristal-cachy`) hecho a partir de la pantalla de
+  bloqueo, con usuarios, sesión (Plasma/Hyprland) y energía en las esquinas.
+  Plasma Login Manager no se puede tematizar, por eso se usa SDDM.
+- `instalar.sh` del respaldo lo copia a `~/.local/share/login-cristal/`.
+  Para activarlo (pide la contraseña de sudo):
+
+  ```sh
+  bash ~/.local/share/login-cristal/instalar.sh
+  ```
+
+  Eso regenera el tema desde la pantalla de bloqueo (`generar.py`), instala
+  SDDM si falta, copia el tema a `/usr/share/sddm/themes/cristal-cachy`, crea
+  `/etc/sddm.conf.d/10-cristal-cachy.conf`, activa el servicio de usuario
+  `login-cristal.path` (mantiene sincronizados fondo, colores y tiempo) y
+  cambia de Plasma Login Manager a SDDM.
+- **Si cambias la pantalla de bloqueo**, vuelve a ejecutar ese `instalar.sh`
+  para que el login la copie. No edites `Main.qml` a mano: se regenera.
+- Si algo sale mal y no puedes entrar: `Ctrl+Alt+F3`, entra con tu usuario y
+  `bash ~/.local/share/login-cristal/instalar.sh --deshacer`, luego reinicia.
+
+## Cubo de escritorios con fondo difuminado
+
+- Copia del efecto *Cubo* de KWin en `~/.local/share/kwin/effects/cube/`
+  (tiene preferencia sobre el del sistema). El único cambio está en
+  `contents/ui/ScreenView.qml`: detrás del cubo se pinta el fondo del
+  escritorio en vivo (sirve también con vídeo) con desenfoque.
+- Aplicarlo sin cerrar sesión:
+  `qdbus6 org.kde.KWin /Effects unloadEffect cube; qdbus6 org.kde.KWin /Effects loadEffect cube`
+- Si una actualización de Plasma cambia el cubo, rehacer la copia desde
+  `/usr/share/kwin/effects/cube` y repetir el cambio. Quitarlo: borrar la carpeta.
+
+## Servicios pequeños
+
+- **Reinicio forzado** (`apagado/`): `~/.local/bin/forzar-apagado.sh` +
+  `forzar-apagado.service`. Si al reiniciar/apagar una app lo frena, a los
+  10 s se fuerza. Si los botones de sesión dejan de responder:
+  `pkill -x plasma-shutdown`.
+- **Audio Bluetooth** (`audio/`): `~/.local/bin/bt-audio-autoswitch` +
+  `bt-audio-autoswitch.service`. Al conectar unos audífonos Bluetooth el
+  sonido se pasa a ellos solo.
 
 ## Actualizar este respaldo
 

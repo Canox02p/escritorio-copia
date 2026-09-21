@@ -1,0 +1,9 @@
+[Unit]
+Description=Copia fondo, colores y tiempo al inicio de sesión (tema SDDM cristal-cachy)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/share/login-cristal/sincronizar.sh
+
+[Install]
+WantedBy=default.target

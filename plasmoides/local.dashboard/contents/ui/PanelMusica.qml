@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kirigami.primitives as KirigamiPrimitives
 import org.kde.plasma.private.mpris as Mpris
+import org.kde.plasma.private.volume as Vol
 
 // Reproductor MPRIS. `grande` cambia entre la tarjeta del inicio y la vista completa.
 Item {
@@ -23,6 +24,16 @@ Item {
                                       : Math.max(52, Math.min(74, musica.height - 6))
 
     Mpris.Mpris2Model { id: mpris }
+
+    // Volumen que se oye (1 = 100 %), para que la corona crezca con él: el de
+    // la salida en uso por el del propio reproductor (el deslizador de abajo).
+    // Por encima de 100 % sigue creciendo un poco, hasta 1.3.
+    readonly property var salida: Vol.PreferredDevice.sink
+    // Sin salida conocida (aún conectando) o reproductor sin volumen: tamaño normal.
+    readonly property real volSalida: !salida ? 1 : salida.muted ? 0
+        : salida.volume / Vol.PulseAudio.NormalVolume
+    readonly property real volJugador: hay && jugador.volume >= 0 ? jugador.volume : 1
+    readonly property real volumen: Math.min(1.3, volSalida * volJugador)
 
     Timer {
         running: musica.sonando && musica.visible && !!musica.Window.window && musica.Window.window.visible
@@ -158,6 +169,7 @@ Item {
                 grosor: 2.5
                 radio: musica.lado / 2 + 9
                 altoMaximo: 14
+                escala: musica.volumen
                 color: musica.p.texto
             }
 

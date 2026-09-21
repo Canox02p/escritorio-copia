@@ -1,0 +1,11 @@
+[Unit]
+Description=Vigila fondo, colores y tiempo para el inicio de sesión
+
+[Path]
+PathChanged=%h/.config/plasma-org.kde.plasma.desktop-appletsrc
+PathChanged=%h/.config/bloqueo-colores
+PathChanged=%h/.cache/dashboard/clima.json
+Unit=login-cristal.service
+
+[Install]
+WantedBy=default.target

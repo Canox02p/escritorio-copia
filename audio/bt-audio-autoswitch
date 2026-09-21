@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Cambia la salida de audio al dispositivo Bluetooth en cuanto aparece.
+#
+# WirePlumber trata el ultimo sink elegido a mano como preferencia fija
+# (find-selected-default-node le da prioridad 30000+), asi que por si solo
+# nunca cambia a unos audifonos recien conectados. Esto lo fuerza.
+
+log() { printf '%s %s\n' "$(date '+%H:%M:%S')" "$*"; }
+
+switch_to_bt() {
+    local name id current
+    # El sink puede tardar un instante en estar listo tras el evento.
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+        name=$(pactl list short sinks 2>/dev/null | awk '$2 ~ /^bluez_output\./ {print $2; exit}')
+        [[ -n $name ]] && break
+        sleep 0.3
+    done
+    [[ -z $name ]] && return
+
+    current=$(pactl get-default-sink 2>/dev/null)
+    [[ $current == "$name" ]] && return
+
+    pactl set-default-sink "$name" || return
+    log "salida -> $name"
+
+    # Mueve tambien lo que ya estuviera sonando en el sink anterior.
+    while read -r id; do
+        pactl move-sink-input "$id" "$name" 2>/dev/null
+    done < <(pactl list short sink-inputs 2>/dev/null | cut -f1)
+}
+
+# Por si los audifonos ya estaban conectados al arrancar el servicio.
+switch_to_bt
+
+pactl subscribe 2>/dev/null | while read -r line; do
+    case $line in
+        *"'new' on sink"*|*"'change' on card"*) switch_to_bt ;;
+    esac
+done

@@ -69,7 +69,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=luisbocanegra.smart.video.wallpaper.reborn
+wallpaperplugin=org.kde.image
 
 [Containments][27][ConfigDialog]
 DialogHeight=630
@@ -86,7 +86,7 @@ MuteMode=5
 VideoUrls=[{"filename":"file://__HOME__/Vídeos/fondo-1080p.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][27][Wallpaper][org.kde.image][General]
-Image=file://__HOME__/Imágenes/wallpapers/moonlight-window-3840x2160-22169.png
+Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
 
 [Containments][28]
 activityId=
@@ -181,7 +181,7 @@ immutability=1
 lastScreen=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=luisbocanegra.smart.video.wallpaper.reborn
+wallpaperplugin=org.kde.image
 
 [Containments][96][Wallpaper][luisbocanegra.smart.video.wallpaper.reborn][General]
 LastVideo=file://__HOME__/Vídeos/fondo-1080p.mp4
@@ -190,7 +190,7 @@ MuteMode=5
 VideoUrls=[{"filename":"file://__HOME__/Vídeos/fondo-1080p.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][96][Wallpaper][org.kde.image][General]
-Image=file://__HOME__/Imágenes/wallpapers/moonlight-window-3840x2160-22169.png
+Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
 
 [Containments][98]
 activityId=

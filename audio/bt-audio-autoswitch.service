@@ -1,0 +1,13 @@
+[Unit]
+Description=Cambiar la salida de audio al conectar un dispositivo Bluetooth
+After=pipewire-pulse.service wireplumber.service
+Wants=pipewire-pulse.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/bt-audio-autoswitch
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

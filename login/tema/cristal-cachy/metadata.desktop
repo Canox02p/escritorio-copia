@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=Cristal CachyOS
+Description=Inicio de sesión a juego con la pantalla de bloqueo local.bloqueo
+Author=Uriel
+License=GPL-2.0-or-later
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=cristal-cachy
+Theme-API=2.0
+QtVersion=6

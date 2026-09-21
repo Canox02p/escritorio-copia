@@ -1,0 +1,11 @@
+{
+    "KPackageStructure": "Plasma/Shell",
+    "KPlugin": {
+        "Description": "Solo la pantalla de bloqueo a medida de Uriel",
+        "Id": "local.bloqueo",
+        "Name": "Bloqueo a medida",
+        "Version": "1.0"
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell",
+    "X-Plasma-APIVersion": "2"
+}

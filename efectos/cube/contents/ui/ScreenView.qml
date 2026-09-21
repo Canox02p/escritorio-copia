@@ -1,0 +1,218 @@
+/*
+    SPDX-FileCopyrightText: 2022 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
+
+import QtQuick
+import QtQuick.Window
+import QtQuick3D
+import QtQuick.Effects
+import org.kde.kwin as KWinComponents
+
+import "constants.js" as Constants
+
+Item {
+    id: root
+    focus: true
+
+    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
+    property QtObject currentDesktop: {
+        if (typeof KWinComponents.Workspace.currentDesktopForScreen === "function") {
+            return KWinComponents.Workspace.currentDesktopForScreen(root.targetScreen);
+        } else {
+            // Fallback for kwin-x11
+            return KWinComponents.Workspace.currentDesktop;
+        }
+    }
+
+    function switchTo(desktop) {
+        if (typeof KWinComponents.Workspace.setCurrentDesktopForScreen === "function") {
+            KWinComponents.Workspace.setCurrentDesktopForScreen(desktop, root.targetScreen);
+        } else {
+            // Fallback for kwin-x11
+            KWinComponents.Workspace.currentDesktop = desktop;
+        }
+
+        effect.deactivate();
+    }
+    function switchToSelected() {
+        const eulerRotation = cameraController.rotation.toEulerAngles();
+        switchTo(cube.desktopAt(eulerRotation.y));
+    }
+
+    // Fondo del escritorio (en vivo, también si es vídeo) difuminado detrás del cubo
+    KWinComponents.DesktopBackground {
+        id: fondo
+        anchors.fill: parent
+        activity: KWinComponents.Workspace.currentActivity
+        desktop: root.currentDesktop
+        outputName: root.targetScreen.name
+        visible: false
+    }
+    MultiEffect {
+        anchors.fill: parent
+        source: fondo
+        autoPaddingEnabled: false
+        blurEnabled: true
+        blur: 1.0
+        blurMax: 64
+        blurMultiplier: 1.5
+    }
+
+    View3D {
+        id: view
+        anchors.fill: parent
+        // TODO: Use the Underlay mode again when the QtQuick3D renderer accounts for QQuickRenderTarget::mirrorVertically().
+        renderMode: View3D.Offscreen
+
+        Loader {
+            id: transparentSceneEnvironment
+            active: effect.configuration.Background == Constants.Background.Color
+            sourceComponent: SceneEnvironment {
+                backgroundMode: SceneEnvironment.Transparent
+
+                // When using View3D.Underlay, SceneEnvironment.clearColor will do nothing.
+                Binding {
+                    target: root.Window.window
+                    property: "color"
+                    value: effect.configuration.BackgroundColor
+                }
+            }
+        }
+
+        Loader {
+            id: skyboxSceneEnvironment
+            active: effect.configuration.Background == Constants.Background.SkyBox
+            sourceComponent: SceneEnvironment {
+                backgroundMode: SceneEnvironment.SkyBox
+                lightProbe: Texture {
+                    source: effect.configuration.SkyBox
+                }
+            }
+        }
+
+        environment: {
+            if (skyboxSceneEnvironment.active) {
+                return skyboxSceneEnvironment.item;
+            } else {
+                return transparentSceneEnvironment.item;
+            }
+        }
+
+        PerspectiveCamera {
+            id: camera
+            clipNear: 10.0
+            clipFar: 100000.0
+        }
+
+        Cube {
+            id: cube
+            faceDisplacement: effect.configuration.CubeFaceDisplacement
+            faceSize: Qt.size(root.width, root.height)
+        }
+
+        CubeCameraController {
+            id: cameraController
+            anchors.fill: parent
+            state: effect.activated ? "distant" : "close"
+            camera: camera
+            xInvert: effect.configuration.MouseInvertedX
+            yInvert: effect.configuration.MouseInvertedY
+
+            states: [
+                State {
+                    name: "close"
+                    PropertyChanges {
+                        target: cameraController
+                        radius: cube.faceDistance + 0.5 * cube.faceSize.height / Math.tan(0.5 * camera.fieldOfView * Math.PI / 180)
+                        rotation: Quaternion.fromEulerAngles(0, cube.desktopAzimuth(currentDesktop), 0)
+                    }
+                },
+                State {
+                    name: "distant"
+                    PropertyChanges {
+                        target: cameraController
+                        radius: cube.faceDistance * effect.configuration.DistanceFactor + 0.5 * cube.faceSize.height / Math.tan(0.5 * camera.fieldOfView * Math.PI / 180)
+                        rotation: Quaternion.fromEulerAngles(0, cube.desktopAzimuth(currentDesktop), 0).times(Quaternion.fromEulerAngles(-20, 0, 0))
+                    }
+                }
+            ]
+
+            Behavior on rotation {
+                enabled: !cameraController.busy
+                QuaternionAnimation {
+                    id: rotationAnimation
+                    duration: effect.animationDuration
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on radius {
+                NumberAnimation {
+                    duration: effect.animationDuration
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            function rotateToLeft() {
+                if (rotationAnimation.running) {
+                    return;
+                }
+                const eulerAngles = rotation.toEulerAngles();
+                let next = Math.floor(eulerAngles.y / cube.angleTick) * cube.angleTick;
+                if (Math.abs(next - eulerAngles.y) < 0.05 * cube.angleTick) {
+                    next -= cube.angleTick;
+                }
+                rotation = Quaternion.fromEulerAngles(0, next - eulerAngles.y, 0).times(rotation);
+            }
+
+            function rotateToRight() {
+                if (rotationAnimation.running) {
+                    return;
+                }
+                const eulerAngles = rotation.toEulerAngles();
+                let next = Math.ceil(eulerAngles.y / cube.angleTick) * cube.angleTick;
+                if (Math.abs(next - eulerAngles.y) < 0.05 * cube.angleTick) {
+                    next += cube.angleTick;
+                }
+                rotation = Quaternion.fromEulerAngles(0, next - eulerAngles.y, 0).times(rotation);
+            }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: view
+        onClicked: mouse => {
+            const hitResult = view.pick(mouse.x, mouse.y);
+            if (hitResult.objectHit) {
+                root.switchTo(hitResult.objectHit.desktop);
+            } else {
+                root.switchToSelected();
+            }
+        }
+    }
+
+    Keys.onEscapePressed: effect.deactivate();
+    Keys.onLeftPressed: cameraController.rotateToLeft();
+    Keys.onRightPressed: cameraController.rotateToRight();
+    Keys.onEnterPressed: root.switchToSelected();
+    Keys.onReturnPressed: root.switchToSelected();
+    Keys.onSpacePressed: root.switchToSelected();
+
+    Connections {
+        target: KWinComponents.Workspace
+        onCurrentDesktopChanged: (previous, current, screen) => {
+            // fallback for kwin-x11
+            if (current === undefined && screen === undefined) {
+                root.currentDesktop = KWinComponents.Workspace.currentDesktop;
+                return;
+            }
+
+            if (screen !== root.targetScreen) {
+                return;
+            }
+
+            root.currentDesktop = current;
+        }
+    }
+}

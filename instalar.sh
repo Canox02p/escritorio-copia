@@ -16,14 +16,14 @@ COPIA="$HOME/respaldo-antes-de-instalar-$(date +%Y%m%d-%H%M)"
 
 echo "==> Comprobando lo que hace falta"
 falta=()
-for orden in magick ffmpegthumbnailer curl upower python3 qdbus6 kwriteconfig6 plasmawindowed; do
+for orden in magick ffmpegthumbnailer curl upower python3 qdbus6 kwriteconfig6 plasmawindowed qml6 ffmpeg; do
     command -v "$orden" >/dev/null 2>&1 || falta+=("$orden")
 done
 python3 -c "import numpy" 2>/dev/null || falta+=("python-numpy")
 fc-list 2>/dev/null | grep -qi "JetBrainsMono" || falta+=("ttf-jetbrains-mono-nerd")
 if [ ${#falta[@]} -gt 0 ]; then
     echo "    FALTAN: ${falta[*]}"
-    echo "    En Arch/CachyOS:  sudo pacman -S imagemagick ffmpegthumbnailer curl upower python-numpy ttf-jetbrains-mono-nerd"
+    echo "    En Arch/CachyOS:  sudo pacman -S imagemagick ffmpegthumbnailer ffmpeg curl upower python-numpy ttf-jetbrains-mono-nerd layer-shell-qt qt6-declarative"
     echo
     read -rp "    ¿Sigo de todas formas? [s/N] " r
     [[ ${r,,} == s* ]] || exit 1
@@ -40,6 +40,48 @@ for w in "$AQUI"/plasmoides/*; do
     cp -r "$w" "$PLASMOIDES/"
     echo "    $n"
 done
+
+echo "==> Pantalla de bloqueo propia"
+if [ -d "$AQUI/bloqueo/local.bloqueo" ]; then
+    mkdir -p "$HOME/.local/share/plasma/shells" "$HOME/.config/systemd/user/plasma-kwin_wayland.service.d"
+    rm -rf "$HOME/.local/share/plasma/shells/local.bloqueo"
+    cp -r "$AQUI/bloqueo/local.bloqueo" "$HOME/.local/share/plasma/shells/"
+    cp "$AQUI/bloqueo/kwin-bloqueo.conf" "$HOME/.config/systemd/user/plasma-kwin_wayland.service.d/bloqueo.conf"
+    echo "    local.bloqueo (se activa al volver a iniciar sesión)"
+fi
+
+echo "==> Reinicio forzado"
+if [ -f "$AQUI/apagado/forzar-apagado.sh" ]; then
+    mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user"
+    cp "$AQUI/apagado/forzar-apagado.sh" "$HOME/.local/bin/"
+    cp "$AQUI/apagado/forzar-apagado.service" "$HOME/.config/systemd/user/"
+    systemctl --user daemon-reload && systemctl --user enable --now forzar-apagado.service
+    echo "    forzar-apagado"
+fi
+
+echo "==> Audio Bluetooth automático"
+if [ -f "$AQUI/audio/bt-audio-autoswitch" ]; then
+    mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user"
+    cp "$AQUI/audio/bt-audio-autoswitch" "$HOME/.local/bin/"
+    cp "$AQUI/audio/bt-audio-autoswitch.service" "$HOME/.config/systemd/user/"
+    systemctl --user daemon-reload && systemctl --user enable --now bt-audio-autoswitch.service
+    echo "    bt-audio-autoswitch"
+fi
+
+echo "==> Inicio de sesión (se copia; se activa aparte con sudo)"
+if [ -d "$AQUI/login" ]; then
+    rm -rf "$HOME/.local/share/login-cristal"
+    cp -r "$AQUI/login" "$HOME/.local/share/login-cristal"
+    echo "    login-cristal copiado. Para activarlo:  bash ~/.local/share/login-cristal/instalar.sh"
+fi
+
+echo "==> Efecto del cubo (fondo difuminado)"
+if [ -d "$AQUI/efectos/cube" ]; then
+    mkdir -p "$HOME/.local/share/kwin/effects"
+    rm -rf "$HOME/.local/share/kwin/effects/cube"
+    cp -r "$AQUI/efectos/cube" "$HOME/.local/share/kwin/effects/"
+    echo "    cube"
+fi
 
 echo "==> Copiando el estilo de Plasma"
 mkdir -p "$ESTILOS"
@@ -70,4 +112,6 @@ echo "    (clic derecho en un panel > Añadir widgets > Obtener nuevos widgets)"
 
 echo
 echo "Listo. Ahora reinicia el shell:   kquitapp6 plasmashell && kstart plasmashell"
+echo "La pantalla de bloqueo se activa al volver a iniciar sesión."
+[ -d "$HOME/.local/share/login-cristal" ] && echo "Login (pide sudo):               bash ~/.local/share/login-cristal/instalar.sh"
 $TODO && echo "Y aplica el estilo:              plasma-apply-desktoptheme cristal"

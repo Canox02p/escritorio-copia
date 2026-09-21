@@ -20,6 +20,9 @@ Item {
     property real radio: 60                // solo en modo circular
     property real altoMaximo: 14
     property color color: p ? p.acento : "#ffffff"
+    // Multiplica las alturas: el servidor normaliza el sonido (ganancia
+    // automática), así que el volumen del sistema hay que aplicarlo aquí.
+    property real escala: 1
 
     readonly property var vacias: new Array(64).fill(0)
     property var barras: vacias
@@ -76,7 +79,7 @@ Item {
         const fuente = vis.barras
         if (!fuente || fuente.length === 0) return 0
         const j = Math.floor(i * fuente.length / vis.numBarras)
-        return Math.max(0, Math.min(1, (fuente[j] || 0) / 1000))   // llegan en milésimas
+        return Math.max(0, Math.min(1, (fuente[j] || 0) / 1000)) * vis.escala   // llegan en milésimas
     }
 
     // ---- Recta (para la barra del panel) ----
