@@ -13,7 +13,11 @@ Rectangle {
     property string dirCodigo: ""
     property bool activo: true
     property int orden: 0           // 0 CPU, 1 GPU, 2 memoria
+    property int categoria: 0       // 0 todo · 1 aplicaciones · 2 segundo plano · 3 sistema
+    property bool ascendente: false // del que menos consume al que más
     signal elegir(int i)
+    signal elegirCategoria(int i)
+    signal voltear()
 
     // Totales que ya mide la tira del panel
     property real cpuTotal: 0
@@ -38,6 +42,9 @@ Rectangle {
         { icono: "freon-gpu-temperature-symbolic", texto: "GPU" },
         { icono: "memory-symbolic",                texto: "MEMORIA" }
     ]
+    readonly property var secciones: ["APLICACIONES", "SEGUNDO PLANO", "SISTEMA"]
+    // Con TODO la lista va mezclada y mandan las cifras, no de quién es el proceso
+    readonly property var categorias: ["TODO", "APPS", "FONDO", "SISTEMA"]
     readonly property string mono: "JetBrainsMono Nerd Font"
     readonly property int anchoPct: 58
     readonly property int anchoRam: 82
@@ -123,30 +130,35 @@ Rectangle {
         return orden === 0 ? x.cpu : (orden === 1 ? x.gpu : x.ram)
     }
     function comparar(a, b) {
-        return (valor(b) - valor(a)) || (b.ram - a.ram) || a.nombre.localeCompare(b.nombre)
+        const sentido = ascendente ? -1 : 1
+        return sentido * ((valor(b) - valor(a)) || (b.ram - a.ram)) || a.nombre.localeCompare(b.nombre)
     }
 
     function construir() {
         const grupos = (datos && datos.grupos) ? datos.grupos.slice() : []
         const f = filtro.trim().toLowerCase()
         const vistos = grupos.filter(g => {
+            if (categoria > 0 && g.seccion !== categoria - 1) return false
             if (f === "") return true
             if (g.nombre.toLowerCase().indexOf(f) >= 0) return true
             return g.hijos.some(h => h.nombre.toLowerCase().indexOf(f) >= 0 || String(h.pid).indexOf(f) === 0)
         })
-        vistos.sort((a, b) => (b.app - a.app) || admin.comparar(a, b))
+        // En TODO gana quien más gasta, venga de donde venga; dentro de una
+        // categoría todas son de la misma, así que también manda la cifra.
+        vistos.sort(admin.comparar)
 
         const salida = []
-        const n = { "APLICACIONES": 0, "SEGUNDO PLANO": 0 }
+        const n = { "APLICACIONES": 0, "SEGUNDO PLANO": 0, "SISTEMA": 0 }
         for (const g of vistos) {
-            const seccion = g.app ? "APLICACIONES" : "SEGUNDO PLANO"
-            const clave = "g:" + g.nombre
+            const seccion = admin.secciones[g.seccion]
+            const clave = "g:" + g.seccion + ":" + g.nombre
             n[seccion]++
             salida.push({
                 clave: clave, tipo: 0, seccion: seccion,
                 nombre: g.nombre, icono: g.icono || "", cuenta: g.hijos.length,
                 cpu: g.cpu, gpu: g.gpu, ram: g.ram,
-                pids: g.pids.join(" "), critico: g.critico, detalle: ""
+                pids: g.pids.join(" "), critico: g.critico, detalle: "",
+                ajeno: !g.mio, resto: !!g.resto
             })
             if (abiertos[clave] && g.hijos.length > 1) {
                 const hijos = g.hijos.slice().sort(admin.comparar)
@@ -156,7 +168,10 @@ Rectangle {
                         nombre: h.nombre, icono: "", cuenta: 0,
                         cpu: h.cpu, gpu: h.gpu, ram: h.ram,
                         pids: String(h.pid), critico: g.critico,
-                        detalle: "PID " + h.pid + "  ·  " + h.orden
+                        // Los trozos del "Resto del sistema" no son procesos: no tienen PID
+                        detalle: h.nota ? h.nota
+                                        : "PID " + h.pid + (h.mio ? "" : "  ·  " + h.usuario) + "  ·  " + h.orden,
+                        ajeno: !h.mio, resto: false
                     })
                 }
             }
@@ -187,6 +202,8 @@ Rectangle {
 
     onOrdenChanged: sincronizar()
     onFiltroChanged: sincronizar()
+    onCategoriaChanged: sincronizar()
+    onAscendenteChanged: sincronizar()
 
     // ---------- Piezas ----------
     component Celda: Item {
@@ -336,7 +353,14 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: admin.elegir(pestana.index)
+                                onClicked: pestana.activa ? admin.voltear() : admin.elegir(pestana.index)
+
+                                QQC2.ToolTip {
+                                    visible: sobre.containsMouse && pestana.activa
+                                    delay: 700
+                                    text: admin.ascendente ? "Ordenar del que más gasta al que menos"
+                                                           : "Ordenar del que menos gasta al que más"
+                                }
                             }
                         }
                     }
@@ -426,7 +450,7 @@ Rectangle {
         // ---- Cabecera de columnas ----
         RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 18
+            Layout.preferredHeight: 22
             Layout.leftMargin: 12
             Layout.rightMargin: 12
             spacing: 4
@@ -446,21 +470,66 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: admin.elegir(parent.indice)
+                    onClicked: parent.activa ? admin.voltear() : admin.elegir(parent.indice)
+
+                    QQC2.ToolTip {
+                        visible: toque.containsMouse
+                        delay: 700
+                        text: parent.parent.activa
+                            ? (admin.ascendente ? "Ordenar del que más gasta al que menos"
+                                                : "Ordenar del que menos gasta al que más")
+                            : "Ordenar por esta columna"
+                    }
                 }
             }
 
-            Text {
+            // Qué entra en la lista. En su sitio estaba el rótulo "NOMBRE",
+            // que no decía nada que no se viera ya.
+            Row {
                 Layout.fillWidth: true
-                text: "NOMBRE"
-                color: admin.p.tenue
-                font.pixelSize: 9
-                font.weight: Font.DemiBold
-                font.letterSpacing: 1.1
+                spacing: 3
+
+                Repeater {
+                    model: admin.categorias
+
+                    delegate: Rectangle {
+                        id: pastilla
+                        required property string modelData
+                        required property int index
+                        readonly property bool activa: admin.categoria === index
+
+                        width: rotuloCat.implicitWidth + 15
+                        height: 20
+                        radius: 7
+                        color: activa ? admin.p.acento
+                                      : (sobreCat.containsMouse ? admin.p.velo(0.1) : "transparent")
+                        Behavior on color { ColorAnimation { duration: 140 } }
+
+                        Text {
+                            id: rotuloCat
+                            anchors.centerIn: parent
+                            text: pastilla.modelData
+                            color: pastilla.activa ? admin.p.sobreAcento
+                                                   : (sobreCat.containsMouse ? admin.p.texto : admin.p.tenue)
+                            font.pixelSize: 9
+                            font.weight: Font.DemiBold
+                            font.letterSpacing: 1.1
+                            Behavior on color { ColorAnimation { duration: 140 } }
+                        }
+
+                        MouseArea {
+                            id: sobreCat
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: admin.elegirCategoria(pastilla.index)
+                        }
+                    }
+                }
             }
-            Cabeza { indice: 0; text: (activa ? "▾ " : "") + "CPU" }
-            Cabeza { indice: 1; text: (activa ? "▾ " : "") + "GPU" }
-            Cabeza { indice: 2; text: (activa ? "▾ " : "") + "MEMORIA"; Layout.preferredWidth: admin.anchoRam }
+            Cabeza { indice: 0; text: (activa ? (admin.ascendente ? "▴ " : "▾ ") : "") + "CPU" }
+            Cabeza { indice: 1; text: (activa ? (admin.ascendente ? "▴ " : "▾ ") : "") + "GPU" }
+            Cabeza { indice: 2; text: (activa ? (admin.ascendente ? "▴ " : "▾ ") : "") + "MEMORIA"; Layout.preferredWidth: admin.anchoRam }
             Item { Layout.preferredWidth: admin.anchoBoton }
         }
 
@@ -490,7 +559,7 @@ Rectangle {
                 NumberAnimation { property: "scale"; to: 1; duration: 150 }
             }
 
-            section.property: "seccion"
+            section.property: admin.categoria === 0 ? "" : "seccion"
             section.delegate: Item {
                 required property string section
                 width: lista.width - 10
@@ -523,6 +592,8 @@ Rectangle {
                 required property string pids
                 required property bool critico
                 required property string detalle
+                required property bool ajeno
+                required property bool resto
 
                 readonly property bool hijo: tipo === 1
                 readonly property bool abierto: !!admin.abiertos[clave]
@@ -553,6 +624,14 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: fila.cuenta > 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: if (fila.cuenta > 1) admin.alternar(fila.clave)
+
+                    QQC2.ToolTip {
+                        visible: sobreFila.containsMouse && fila.ajeno
+                        delay: 700
+                        text: fila.resto
+                            ? "Lo que no carga ningún proceso: interrupciones, espera de disco, caché del núcleo y lo que nace y muere entre dos lecturas"
+                            : "Del sistema o de otro usuario: desde aquí no se cierra"
+                    }
                 }
 
                 RowLayout {
@@ -583,6 +662,11 @@ Rectangle {
                             width: 20; height: 20
                             visible: fila.icono !== ""
                             source: fila.icono
+                            // Los simbólicos (núcleo, resto del sistema) vienen a
+                            // una tinta: se pintan como el resto de la interfaz
+                            readonly property bool plano: fila.icono.endsWith("-symbolic")
+                            isMask: plano
+                            color: plano ? admin.p.tenue : "transparent"
                         }
                         Kirigami.Icon {
                             anchors.centerIn: parent
@@ -650,6 +734,7 @@ Rectangle {
 
                         Rectangle {
                             id: boton
+                            visible: !fila.ajeno
                             anchors.right: parent.right
                             anchors.rightMargin: 4
                             anchors.verticalCenter: parent.verticalCenter

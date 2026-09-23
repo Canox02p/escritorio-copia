@@ -80,10 +80,10 @@ lastResolution=1745x982
 sortMode=-1
 
 [Containments][27][Wallpaper][luisbocanegra.smart.video.wallpaper.reborn][General]
-LastVideo=file://__HOME__/Vídeos/fondo-1080p.mp4
-LastVideoPosition=1500
+LastVideo=file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4
+LastVideoPosition=0
 MuteMode=5
-VideoUrls=[{"filename":"file://__HOME__/Vídeos/fondo-1080p.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
+VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][27][Wallpaper][org.kde.image][General]
 Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
@@ -184,10 +184,10 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
 [Containments][96][Wallpaper][luisbocanegra.smart.video.wallpaper.reborn][General]
-LastVideo=file://__HOME__/Vídeos/fondo-1080p.mp4
+LastVideo=file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4
 LastVideoPosition=0
 MuteMode=5
-VideoUrls=[{"filename":"file://__HOME__/Vídeos/fondo-1080p.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
+VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][96][Wallpaper][org.kde.image][General]
 Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
@@ -221,4 +221,4 @@ opacidadTarjetas=22
 AppletOrder=99
 
 [ScreenMapping]
-screenMapping=
+screenMapping=desktop:/Jaime,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/atajos-kde-plasma.txt,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/Media Link Overlay,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/demo,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62

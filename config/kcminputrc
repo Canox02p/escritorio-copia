@@ -1,0 +1,6 @@
+[Libinput][1267][12608][ELAN06FA:00 04F3:3140 Touchpad]
+Enabled=true
+NaturalScroll=true
+
+[Mouse]
+cursorTheme=breeze_cursors

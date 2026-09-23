@@ -288,10 +288,6 @@ repeat_action=none,none,Invocar manualmente la acción en el portapapeles actual
 show-barcode=none,none,Mostrar código de barras…
 show-on-mouse-pos=none,Meta+V,Mostrar elementos del portapapeles en la posición del ratón
 
-[services][org.kde.spectacle.desktop]
-CurrentMonitorScreenShot=none
-OpenWithoutScreenshot=none
-
 [tablerodash]
 _k_friendly_name=Tablero
 portapapeles=Meta+V,none,Abrir el portapapeles

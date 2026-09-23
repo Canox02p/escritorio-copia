@@ -17,8 +17,10 @@ Bluetooth y reinicio forzado).
 | `efectos/cube/` | Cubo de escritorios de KWin con tu fondo difuminado detrás |
 | `apagado/` | Reinicio/apagado forzado a los 10 s si una app lo frena (como en Windows) |
 | `audio/` | Cambia el sonido solo al conectar unos audífonos Bluetooth |
-| `config/` | Copia de los ajustes: paneles, atajos, reglas de ventanas, esquema de color, bloqueo (`kscreenlockerrc`) y el color elegido en el bloqueo (`bloqueo-colores`) |
+| `config/` | Copia de los ajustes: paneles, atajos, reglas de ventanas, esquema de color, bloqueo (`kscreenlockerrc`), el color elegido en el bloqueo (`bloqueo-colores`), cursor (`kcminputrc`), avisos, energía, apariencia de GTK y la disposición de pantallas (`kwinoutputconfig.json`, sólo de consulta) |
 | `widgets-de-terceros.txt` | Los widgets que **no** son míos y hay que bajar de la tienda |
+| `temas-de-terceros.txt` | Iconos, temas de Plasma, decoraciones y esquemas de color que tampoco son míos: se bajan de *Obtener nuevos…* |
+| `fondos.txt` | Qué fondos usa el escritorio y dónde están. Las imágenes y los vídeos no se suben: pesan y son descargas |
 | `instalar.sh` | Deja todo esto en un equipo nuevo |
 | `respaldar.sh` | Vuelve a volcar aquí el escritorio actual (ejecutar tras cada cambio) |
 
@@ -29,7 +31,7 @@ Bluetooth y reinicio forzado).
 | `local.dashboard` | Barra central de arriba | En la barra: **hora**, título de la canción con desplazamiento y un **visualizador que responde al sonido**. Al pulsar la hora abre **Inicio**; al pulsar la canción, **Música**. Dentro: Inicio (reloj, calendario, tiempo, avisos, música), Música, Sistema, Tiempo y **Portapapeles** (historial de Klipper, se abre también con **Meta+V**) |
 | `local.centrocontrol` | Arriba a la derecha | Volumen, Bluetooth, red, brillo de pantalla y teclado, batería y sesión. En la barra enseña internet, volumen, batería y apagado |
 | `local.avisos` | Borde derecho (se asoma al acercar el ratón a media altura) | Notificaciones con el dinosaurio cuando no hay nada, accesos rápidos (silencio, micrófono, no molestar, ajustes) y botones para vaciar avisos y abrir los fondos |
-| `local.panelsistema` | Arriba a la izquierda | Tira con CPU, GPU, RAM y temperatura; cada dato abre un administrador de tareas (procesos con CPU, GPU y memoria, y botón para finalizarlos) |
+| `local.panelsistema` | Arriba a la izquierda | Tira con CPU, GPU, RAM y temperatura; cada dato abre un administrador de tareas al estilo del de Windows. Lista **todo el sistema** (lo tuyo, lo de root y los hilos del núcleo), con filtro *TODO · APPS · FONDO · SISTEMA*, orden por cualquier columna en los dos sentidos y una fila *Resto del sistema*, desplegable, con lo que no carga ningún proceso, para que la lista cuadre con los totales |
 | `local.selectorfondos` | Se abre desde el botón *Fondos* del centro de avisos | Cambia el fondo de pantalla: imágenes **y vídeos**. Se abre a pantalla completa (tira de tarjetas inclinadas) con `contents/code/abrir.sh` |
 | `local.escritorios` | Barra lateral | Los números de escritorio, con la misma tipografía que el resto |
 | `local.relojcentral`, `local.visualizador` | Sin usar ahora mismo | Se quedan por si hacen falta |
@@ -164,6 +166,9 @@ Si algo no cuadra en otra máquina, mira aquí primero:
 - **Fondos de pantalla**: el selector busca en `~/Imágenes/wallpapers`
   (cualquier imagen o vídeo, también en subcarpetas), además de `~/Vídeos`,
   `~/Imágenes` y los fondos del sistema.
+- **La disposición de pantallas** (`config/kwinoutputconfig.json`) se guarda
+  para poder consultarla, pero `instalar.sh --todo` **no la aplica**: describe
+  los monitores de este portátil y en otro equipo dejaría la pantalla mal.
 - **El tiempo** se saca de wttr.in por IP: no hay que configurar ciudad.
 - **Meta+V** abre el portapapeles. El atajo vive en `kglobalshortcutsrc`
   bajo `[tablerodash]`; está aparte en `config/atajos-propios.ini`.

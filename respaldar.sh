@@ -14,6 +14,8 @@ for w in "$PLASMOIDES"/local.*; do
     cp -r "$w" "$AQUI/plasmoides/"
     echo "    $(basename "$w")"
 done
+# La caché de Python se regenera sola y ensucia el historial
+find "$AQUI/plasmoides" -name __pycache__ -type d -prune -exec rm -rf {} +
 
 echo "==> Estilo de Plasma propio"
 rm -rf "$AQUI/estilo"; mkdir -p "$AQUI/estilo"
@@ -57,16 +59,23 @@ fi
 
 echo "==> Configuración"
 mkdir -p "$AQUI/config"
+# kwinoutputconfig.json es de las pantallas de ESTE equipo: se guarda como
+# referencia, pero instalar.sh no lo aplica.
 for f in plasma-org.kde.plasma.desktop-appletsrc plasmashellrc plasmarc kwinrulesrc \
-         kglobalshortcutsrc kdeglobals kwinrc kscreenlockerrc bloqueo-colores; do
+         kglobalshortcutsrc kdeglobals kwinrc kscreenlockerrc bloqueo-colores \
+         kcminputrc ksmserverrc plasmanotifyrc powermanagementprofilesrc \
+         gtkrc gtkrc-2.0 kwinoutputconfig.json; do
     [ -f "$HOME/.config/$f" ] && cp "$HOME/.config/$f" "$AQUI/config/" && echo "    $f"
 done
 
 echo "==> Quitando datos privados (se sube a git)"
 # Los nombres de los archivos del escritorio no se guardan, y la carpeta
 # personal se cambia por __HOME__ (instalar.sh la vuelve a poner).
+# Los identificadores EDID señalan a estas pantallas concretas y no hacen
+# falta para nada: la disposición se guarda sólo de consulta.
 for f in "$AQUI"/config/*; do
     sed -i -e '/^\(positions\|changedPositions\|itemsOnDisabledScreens\)=/d' \
+           -e '/"edid\(Hash\|Identifier\)":/d' \
            -e "s|$HOME|__HOME__|g" "$f"
 done
 
@@ -91,6 +100,42 @@ echo "==> Lista de widgets de terceros que hacen falta"
         echo "$n"
     done
 } > "$AQUI/widgets-de-terceros.txt"
+
+echo "==> Lista de temas de terceros que hacen falta"
+{
+    echo "# Temas instalados a mano (no se suben: ocupan mucho y se descargan)"
+    echo "# Se bajan de Preferencias del sistema > Apariencia > Obtener nuevos…"
+    for d in "$HOME/.local/share/icons" "$HOME/.local/share/plasma/desktoptheme" \
+             "$HOME/.local/share/plasma/look-and-feel" "$HOME/.local/share/aurorae/themes" \
+             "$HOME/.local/share/color-schemes" "$HOME/.local/share/wallpapers"; do
+        [ -d "$d" ] || continue
+        echo
+        echo "## ${d#$HOME/.local/share/}"
+        for t in "$d"/*; do
+            n=$(basename "$t")
+            # 'cristal' es nuestro y hicolor lo generan los propios programas
+            case "$n" in cristal|hicolor) continue ;; esac
+            echo "$n"
+        done
+    done
+} > "$AQUI/temas-de-terceros.txt"
+echo "    temas-de-terceros.txt"
+
+echo "==> Fondos en uso (las imágenes no se suben)"
+{
+    echo "# Fondos que usa este escritorio. Las imágenes no van en el repositorio:"
+    echo "# son descargas, pesan y no son creación propia. Cópialas aparte."
+    grep -hE "^Image=" "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" 2>/dev/null |
+        sed 's|^Image=file://||' | sort -u
+    for d in "$HOME/Imágenes/wallpapers" "$HOME/Imágenes/fondos"; do
+        [ -d "$d" ] || continue
+        echo
+        echo "## $d  ($(du -sh "$d" | cut -f1))"
+        ls "$d"
+    done
+} > "$AQUI/fondos.txt"
+sed -i "s|$HOME|__HOME__|g" "$AQUI/fondos.txt"   # aquí también sobra la ruta personal
+echo "    fondos.txt"
 
 echo
 echo "Listo. Respaldo actualizado en $AQUI"

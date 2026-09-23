@@ -238,14 +238,14 @@ bloque('''                        source: ui.musica && ui.musica.sonando ? "medi
 ''')
 
 # ── Contraseña ────────────────────────────────────────────────────────
-cambiar('''border.color: authenticator.graceLocked ?''', '''border.color: ui.mensaje === "Contraseña incorrecta" ?''')
-cambiar('''                        enabled: !authenticator.graceLocked''', '''                        enabled: !ui.entrando''')
+cambiar('''border.color: graceLockTimer.running ?''', '''border.color: ui.mensaje === "Contraseña incorrecta" ?''')
+cambiar('''                        enabled: !graceLockTimer.running''', '''                        enabled: !ui.entrando''')
 cambiar('''                        text: PasswordSync.password
 ''', "")
 cambiar('''                        onAccepted: ui.desbloquear()
                         Keys.onEscapePressed: root.clearPassword()''', '''                        onAccepted: ui.entrar()
                         Keys.onEscapePressed: { text = ""; ui.menu = ""; }''')
-cambiar('''text: authenticator.graceLocked ? "Espera un momento…" : "Contraseña"''',
+cambiar('''text: graceLockTimer.running ? "Espera un momento…" : "Contraseña"''',
         '''text: ui.entrando ? "Entrando…" : "Contraseña"''')
 cambiar('''onClicked: ui.sinClave ? Qt.quit() : ui.desbloquear()''', '''onClicked: ui.entrar()''')
 cambiar('''if (capsLockState.locked) partes.push("Bloq Mayús activado");

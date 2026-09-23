@@ -97,7 +97,9 @@ if $TODO; then
     mkdir -p "$COPIA/config" "$HOME/.config"
     for f in "$AQUI"/config/*; do
         n=$(basename "$f")
-        case "$n" in atajos-propios.ini) continue ;; esac
+        # atajos-propios.ini es una copia de consulta y kwinoutputconfig.json
+        # describe las pantallas del equipo de origen: ninguno se aplica.
+        case "$n" in atajos-propios.ini|kwinoutputconfig.json) continue ;; esac
         [ -f "$HOME/.config/$n" ] && cp "$HOME/.config/$n" "$COPIA/config/"
         sed "s|__HOME__|$HOME|g" "$f" > "$HOME/.config/$n"
         echo "    $n"
@@ -109,6 +111,16 @@ fi
 echo "==> Widgets de terceros que tendrás que instalar a mano:"
 sed '/^#/d' "$AQUI/widgets-de-terceros.txt" | sed 's/^/    /'
 echo "    (clic derecho en un panel > Añadir widgets > Obtener nuevos widgets)"
+
+if [ -f "$AQUI/temas-de-terceros.txt" ]; then
+    echo "==> Temas de terceros que tendrás que instalar a mano:"
+    sed '/^#/d;/^$/d' "$AQUI/temas-de-terceros.txt" | sed 's/^/    /'
+fi
+
+if [ -f "$AQUI/fondos.txt" ]; then
+    echo "==> Fondos: las imágenes no viajan aquí. Las rutas que usaba están en"
+    echo "    fondos.txt; cópialas a mano si quieres el mismo fondo."
+fi
 
 echo
 echo "Listo. Ahora reinicia el shell:   kquitapp6 plasmashell && kstart plasmashell"

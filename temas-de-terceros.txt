@@ -1,0 +1,35 @@
+# Temas instalados a mano (no se suben: ocupan mucho y se descargan)
+# Se bajan de Preferencias del sistema > Apariencia > Obtener nuevos…
+
+## icons
+Bibata-Modern-Ice
+Breeze Chameleon Dark
+candy-icons
+Colorful-Dark-Icons
+McMojave-circle
+McMojave-circle-dark
+McMojave-circle-light
+Mojave-CT-Black
+Papirus
+Papirus-Dark
+Papirus-Light
+We10X-black
+We10X-black-dark
+
+## plasma/desktoptheme
+Otto
+Sweet
+
+## plasma/look-and-feel
+Otto
+Overload
+
+## aurorae/themes
+Otto
+
+## color-schemes
+noctalia.colors
+Otto.colors
+
+## wallpapers
+Otto

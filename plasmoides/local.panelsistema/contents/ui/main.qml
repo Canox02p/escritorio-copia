@@ -122,6 +122,12 @@ PlasmoidItem {
         orden: root.orden
         onElegir: i => root.orden = i
 
+        // Lo que se elige aquí se recuerda entre sesiones
+        categoria: Plasmoid.configuration.categoria
+        ascendente: Plasmoid.configuration.ascendente
+        onElegirCategoria: i => Plasmoid.configuration.categoria = i
+        onVoltear: Plasmoid.configuration.ascendente = !Plasmoid.configuration.ascendente
+
         cpuTotal: root.numero(sCpu)
         gpuTotal: root.numero(sGpu)
         ramPorcentaje: root.numero(sRam)

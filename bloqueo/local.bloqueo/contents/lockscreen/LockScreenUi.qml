@@ -107,6 +107,9 @@ Item {
 
     readonly property string carpeta: Qt.resolvedUrl(".").toString().replace("file://", "")
 
+    // Contraseña escrita mientras PAM no escuchaba: se entrega en cuanto la pida
+    property string pendiente: ""
+
     function handleMessage(msg) {
         if (!msg) return;
         if (!root.notification) {
@@ -119,8 +122,18 @@ Item {
     }
 
     function desbloquear() {
-        if (authenticator.graceLocked) return;
         campo.forceActiveFocus();
+        if (graceLockTimer.running) return;   // en la espera tras un fallo
+        // Al suspender (y al cortarse la conversación por cualquier motivo)
+        // kscreenlocker cancela PAM: responder entonces no hace absolutamente
+        // nada. Se guarda la contraseña, se levanta PAM otra vez y se entrega
+        // en cuanto vuelva a pedirla.
+        ui.pendiente = campo.text;
+        pendienteCaduca.restart();
+        if (authenticator.state !== 1) {      // 1 = Authenticating
+            authenticator.startAuthenticating();
+            return;
+        }
         authenticator.respond(campo.text);
     }
 
@@ -132,6 +145,7 @@ Item {
         target: authenticator
         function onFailed(kind) {
             if (kind != 0) return;
+            ui.pendiente = "";
             ui.handleMessage("Contraseña incorrecta");
             graceLockTimer.restart();
             notificationRemoveTimer.restart();
@@ -147,12 +161,23 @@ Item {
         function onInfoMessageChanged() { ui.handleMessage(authenticator.infoMessage); }
         function onErrorMessageChanged() { ui.handleMessage(authenticator.errorMessage); }
         function onPromptChanged(msg) { ui.handleMessage(authenticator.prompt); }
-        function onPromptForSecretChanged(msg) { campo.forceActiveFocus(); }
+        function onPromptForSecretChanged(msg) {
+            campo.forceActiveFocus();
+            if (ui.pendiente !== "") authenticator.respond(ui.pendiente);
+        }
+        function onBusyChanged() {
+            // PAM acusó recibo de la respuesta: ya no hace falta guardarla
+            if (authenticator.busy) {
+                ui.pendiente = "";
+                pendienteCaduca.stop();
+            }
+        }
     }
 
     Connections {
         target: root
         function onClearPassword() {
+            ui.pendiente = "";
             campo.forceActiveFocus();
             campo.text = "";
             campo.text = Qt.binding(() => PasswordSync.password);
@@ -177,6 +202,25 @@ Item {
         id: notificationRemoveTimer
         interval: 3000
         onTriggered: root.notification = ""
+    }
+    // Sin esto, tras suspender o apagarse la pantalla PAM se queda cancelado:
+    // el campo sigue aceptando letras pero ni Enter ni el botón hacen nada.
+    Timer {
+        id: vigia
+        interval: 2000; repeat: true; running: true
+        onTriggered: if (authenticator.state !== 1 && !graceLockTimer.running) authenticator.startAuthenticating()
+    }
+    // Si aun así PAM no responde, no dejar la contraseña esperando indefinidamente
+    Timer {
+        id: pendienteCaduca
+        interval: 8000
+        onTriggered: {
+            ui.pendiente = "";
+            ui.handleMessage("Vuelve a intentarlo");
+            notificationRemoveTimer.restart();
+            // sin cancel(): cancelar la conversación cuenta como intento
+            // fallido en pam_faillock. Del reinicio se encarga el vigía.
+        }
     }
     Timer {
         id: graceLockTimer
@@ -716,7 +760,7 @@ Item {
                     radius: 25
                     color: Qt.rgba(1, 1, 1, campo.activeFocus ? 0.08 : 0.05)
                     border.width: 1
-                    border.color: authenticator.graceLocked ? Qt.rgba(1, 0.45, 0.5, 0.6)
+                    border.color: graceLockTimer.running ? Qt.rgba(1, 0.45, 0.5, 0.6)
                                                             : Qt.rgba(1, 1, 1, campo.activeFocus ? 0.14 : 0.06)
 
                     transform: Translate { id: desplazo }
@@ -745,7 +789,7 @@ Item {
                         anchors.rightMargin: 52
                         visible: !ui.sinClave
                         focus: true
-                        enabled: !authenticator.graceLocked
+                        enabled: !graceLockTimer.running
                         echoMode: TextInput.Password
                         text: PasswordSync.password
                         color: "transparent"
@@ -778,7 +822,7 @@ Item {
                     Text {
                         anchors.centerIn: parent
                         visible: campo.length === 0 && !ui.sinClave
-                        text: authenticator.graceLocked ? "Espera un momento…" : "Contraseña"
+                        text: graceLockTimer.running ? "Espera un momento…" : "Contraseña"
                         color: ui.tenue
                         font.pixelSize: 14
                     }

@@ -1,2 +1,4 @@
 respaldo-antes-de-instalar-*/
 *.swp
+__pycache__/
+*.pyc
