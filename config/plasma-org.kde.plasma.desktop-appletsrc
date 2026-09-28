@@ -221,4 +221,4 @@ opacidadTarjetas=22
 AppletOrder=99
 
 [ScreenMapping]
-screenMapping=desktop:/Jaime,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/atajos-kde-plasma.txt,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/Media Link Overlay,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62,desktop:/demo,1,05041ca2-2c86-4ee6-998c-65f8b08e5a62
+screenMapping=

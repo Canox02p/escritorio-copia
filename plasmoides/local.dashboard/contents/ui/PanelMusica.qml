@@ -58,7 +58,8 @@ Item {
             implicitWidth: musica.grande ? 56 : 34
             implicitHeight: implicitWidth
             source: "media-playback-pause"
-            color: musica.p.velo(0.25)
+            color: musica.p.texto
+            opacity: 0.30
             isMask: true
         }
         Text {
@@ -90,7 +91,8 @@ Item {
                 height: width
                 source: "media-album-cover"
                 isMask: true
-                color: musica.p.velo(0.2)
+                color: musica.p.texto
+                opacity: 0.22
                 visible: !musica.jugador || !musica.jugador.artUrl
             }
         }
@@ -191,7 +193,8 @@ Item {
                     height: width
                     source: "media-album-cover"
                     isMask: true
-                    color: musica.p.velo(0.2)
+                    color: musica.p.texto
+                opacity: 0.22
                     visible: !musica.jugador || !musica.jugador.artUrl
                 }
             }

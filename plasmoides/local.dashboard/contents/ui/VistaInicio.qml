@@ -293,24 +293,31 @@ GridLayout {
             anchors.centerIn: parent
             spacing: 9
 
+            // La paleta se asigna en cada Medidor, no en el componente: dentro
+            // del cuerpo de un componente en linea el id "inicio" no resuelve y
+            // "p" se quedaba en undefined, asi que los aros salian con los
+            // colores de emergencia de Aro.qml (riel #444, relleno blanco puro)
+            // en vez de los del fondo de pantalla.
             component Medidor: Aro {
                 width: 58; height: 58
-                p: inicio.p
                 grosor: 4
                 tamanoCifra: 10
             }
 
             Medidor {
+                p: inicio.p
                 icono: "computer-symbolic"
                 valor: inicio.s.cpu / 100
                 cifra: Math.round(inicio.s.cpu) + "%"
             }
             Medidor {
+                p: inicio.p
                 icono: "media-flash-symbolic"
                 valor: inicio.s.ram / 100
                 cifra: Math.round(inicio.s.ram) + "%"
             }
             Medidor {
+                p: inicio.p
                 icono: "drive-harddisk-symbolic"
                 valor: (inicio.s.disco.porcentaje || 0) / 100
                 cifra: (inicio.s.disco.porcentaje || 0) + "%"
