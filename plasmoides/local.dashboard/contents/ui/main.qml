@@ -65,6 +65,58 @@ PlasmoidItem {
     function ponerHora() { hora = Qt.formatTime(new Date(), "h:mm AP") }
     Timer { interval: 1000; running: true; repeat: true; triggeredOnStart: true; onTriggered: root.ponerHora() }
 
+    // ---- Isla de notificaciones ----
+    // Cuando entra un aviso, la tira del panel se transforma un momento en una
+    // píldora con la notificación y luego vuelve a la hora y la canción.
+    property var avisoActual: null
+    property bool avisoVisible: false
+    property var colaAvisos: []
+    property bool ratonEnIsla: false
+
+    Vigia {
+        onLlega: (datos) => root.encolarAviso(datos)
+    }
+
+    // Hueco entre un aviso y el siguiente, para que se note el cambio
+    Timer { id: relevo; interval: 320; onTriggered: root.siguienteAviso() }
+
+    Timer {
+        id: cuentaAtras
+        onTriggered: {
+            if (root.ratonEnIsla) { restart(); return }   // con el ratón encima se queda
+            root.avisoVisible = false
+            relevo.start()
+        }
+    }
+
+    function encolarAviso(d) {
+        if (root.expanded) return          // con el tablero abierto ya se leen ahí
+        const c = root.colaAvisos.slice()
+        c.push(d)
+        while (c.length > 4) c.shift()
+        root.colaAvisos = c
+        if (!root.avisoVisible) root.siguienteAviso()
+    }
+
+    function siguienteAviso() {
+        if (root.avisoVisible || root.colaAvisos.length === 0) return
+        const c = root.colaAvisos.slice()
+        root.avisoActual = c.shift()
+        root.colaAvisos = c
+        root.avisoVisible = true
+        // Lo que se tarda en leerlo: base 4,2 s y un poco más si trae texto
+        cuentaAtras.interval = Math.min(9000, 4200 + String(root.avisoActual.cuerpo || "").length * 45)
+        cuentaAtras.restart()
+    }
+
+    onExpandedChanged: {
+        if (expanded) {
+            avisoVisible = false
+            colaAvisos = []
+            cuentaAtras.stop()
+        }
+    }
+
     function abrir(i) {
         if (root.expanded && root.seccion === i) {
             root.expanded = false
@@ -80,15 +132,35 @@ PlasmoidItem {
 
         readonly property bool horizontal: Plasmoid.formFactor !== PlasmaCore.Types.Vertical
 
-        Layout.minimumWidth: horizontal ? fila.implicitWidth + 14 : 0
+        // El ancho se estira y se encoge solo al entrar y salir la isla
+        property real anchoActual: (root.avisoVisible ? isla.implicitWidth : fila.implicitWidth) + 14
+        Behavior on anchoActual {
+            NumberAnimation { duration: 320; easing.type: Easing.OutCubic }
+        }
+
+        Layout.minimumWidth: horizontal ? anchoActual : 0
         Layout.minimumHeight: horizontal ? 0 : fila.implicitHeight + 14
-        implicitWidth: fila.implicitWidth + 14
-        implicitHeight: Math.max(fila.implicitHeight, 20)
+        implicitWidth: anchoActual
+        implicitHeight: Math.max(fila.implicitHeight, isla.implicitHeight, 20)
 
         Row {
             id: fila
             anchors.centerIn: parent
+            anchors.verticalCenterOffset: root.avisoVisible ? -10 : 0
             spacing: 16
+
+            opacity: root.avisoVisible ? 0 : 1
+            scale: root.avisoVisible ? 0.94 : 1
+            visible: opacity > 0.01
+            Behavior on anchors.verticalCenterOffset {
+                NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
+            }
+            Behavior on opacity {
+                NumberAnimation { duration: root.avisoVisible ? 140 : 240; easing.type: Easing.OutCubic }
+            }
+            Behavior on scale {
+                NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
+            }
 
             // La hora abre Inicio
             Item {
@@ -163,6 +235,18 @@ PlasmoidItem {
                     onClicked: root.abrir(1)
                 }
             }
+        }
+
+        Isla {
+            id: isla
+            anchors.centerIn: parent
+            p: paleta
+            aviso: root.avisoActual
+            mostrando: root.avisoVisible
+            anchoMaximo: 330
+            borde: Plasmoid.location
+            onPulsada: { root.avisoVisible = false; root.abrir(0) }
+            onSobreChanged: root.ratonEnIsla = sobre
         }
     }
 
