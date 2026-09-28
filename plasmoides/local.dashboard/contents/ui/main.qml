@@ -132,11 +132,10 @@ PlasmoidItem {
 
         readonly property bool horizontal: Plasmoid.formFactor !== PlasmaCore.Types.Vertical
 
-        // El ancho se estira y se encoge solo al entrar y salir la isla
-        property real anchoActual: (root.avisoVisible ? isla.implicitWidth : fila.implicitWidth) + 14
-        Behavior on anchoActual {
-            NumberAnimation { duration: 320; easing.type: Easing.OutCubic }
-        }
+        // El ancho cambia de golpe a propósito: animarlo obliga al panel a
+        // recolocarse en cada fotograma y la animación se ve a tirones. El salto
+        // queda tapado por el fundido del contenido.
+        readonly property real anchoActual: (root.avisoVisible ? isla.implicitWidth : fila.implicitWidth) + 14
 
         Layout.minimumWidth: horizontal ? anchoActual : 0
         Layout.minimumHeight: horizontal ? 0 : fila.implicitHeight + 14
@@ -217,7 +216,7 @@ PlasmoidItem {
                         anchors.verticalCenter: parent.verticalCenter
                         p: paleta
                         dirCodigo: root.dirCodigo
-                        activo: root.sonando && root.barraALaVista
+                        activo: root.sonando && root.barraALaVista && !root.avisoVisible
                         numBarras: 22
                         grosor: 2
                         separacion: 2
