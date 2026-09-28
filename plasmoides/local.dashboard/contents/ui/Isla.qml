@@ -87,6 +87,8 @@ Item {
     TapHandler { onTapped: isla.pulsada() }
 
     // ---- Tarjeta de debajo, al pasar el ratón ----
+    // Pelada a propósito: sin icono grande, sin borde y sin el nombre de la app.
+    // Solo un cuadro negro, como el de las notificaciones del sistema.
     PlasmaCore.Dialog {
         id: tarjeta
         visualParent: isla
@@ -98,20 +100,15 @@ Item {
         visible: isla.expandida && !!isla.aviso
 
         mainItem: Item {
-            width: 330
+            width: 320
             height: marco.height
 
             Rectangle {
                 id: marco
                 width: parent.width
-                height: columna.implicitHeight + 28
+                height: columna.implicitHeight + 30
                 radius: 12
-                // Un diálogo de tipo tooltip no recibe el desenfoque de KWin, así
-                // que el cristal se leería a través: este va casi opaco.
-                color: isla.p ? Qt.rgba(isla.p.fondo.r, isla.p.fondo.g, isla.p.fondo.b, 0.94)
-                              : "#f00a0a0c"
-                border.width: 1
-                border.color: isla.p ? isla.p.borde : "#26ffffff"
+                color: isla.p ? Qt.rgba(isla.p.fondo.r, isla.p.fondo.g, isla.p.fondo.b, 1) : "#0a0a0c"
 
                 opacity: isla.expandida ? 1 : 0
                 scale: isla.expandida ? 1 : 0.96
@@ -121,57 +118,38 @@ Item {
 
                 HoverHandler { id: sobreTarjeta }
 
-                Row {
+                Column {
                     id: columna
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
-                    anchors.margins: 14
-                    spacing: 12
+                    anchors.margins: 15
+                    spacing: 5
 
-                    Kirigami.Icon {
-                        width: 28; height: 28
-                        source: isla.aviso ? isla.aviso.icono : "dialog-information"
+                    Text {
+                        width: parent.width
+                        text: isla.aviso ? isla.aviso.resumen : ""
+                        color: isla.p ? isla.p.texto : "#f4f4f6"
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pixelSize: 12
+                        font.weight: Font.DemiBold
+                        font.letterSpacing: 0.6
+                        wrapMode: Text.Wrap
+                        maximumLineCount: 2
+                        elide: Text.ElideRight
+                        visible: text !== ""
                     }
 
-                    Column {
-                        width: parent.width - 28 - 12
-                        spacing: 4
-
-                        Text {
-                            text: isla.aviso ? String(isla.aviso.app).toUpperCase() : ""
-                            color: isla.p ? isla.p.acento : "#f2f2f4"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 9
-                            font.weight: Font.DemiBold
-                            font.letterSpacing: 1.2
-                            visible: text !== ""
-                        }
-
-                        Text {
-                            width: parent.width
-                            text: isla.aviso ? isla.aviso.resumen : ""
-                            color: isla.p ? isla.p.texto : "#f4f4f6"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 12
-                            font.weight: Font.DemiBold
-                            wrapMode: Text.Wrap
-                            maximumLineCount: 2
-                            elide: Text.ElideRight
-                            visible: text !== ""
-                        }
-
-                        Text {
-                            width: parent.width
-                            text: isla.aviso ? isla.aviso.cuerpo : ""
-                            color: isla.p ? isla.p.tenue : "#9a9aa2"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
-                            wrapMode: Text.Wrap
-                            maximumLineCount: 5
-                            elide: Text.ElideRight
-                            visible: text !== ""
-                        }
+                    Text {
+                        width: parent.width
+                        text: isla.aviso ? isla.aviso.cuerpo : ""
+                        color: isla.p ? isla.p.tenue : "#9a9aa2"
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pixelSize: 11
+                        wrapMode: Text.Wrap
+                        maximumLineCount: 6
+                        elide: Text.ElideRight
+                        visible: text !== ""
                     }
                 }
             }
