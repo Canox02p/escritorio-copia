@@ -1,61 +1,113 @@
 #!/usr/bin/env bash
-# Escribe ~/.cache/dashboard/paleta.json con la paleta del fondo actual.
-# Se pondera por saturación² para que un detalle vivo gane sobre un fondo casi gris.
+# Paleta del escritorio, derivada del MISMO acento que la pantalla de bloqueo.
+#
+# La fuente de la verdad es `fondo.sh` del paquete local.bloqueo: imprime la
+# paleta del fondo actual y la elección guardada en ~/.config/bloqueo-colores
+# (línea 1 "auto" o #rrggbb, línea 2 el color propio). Aquí se repite el mismo
+# cálculo que hace LockScreenUi.qml (HSL, `avivar`, `tonoFondo`) para que el
+# escritorio salga exactamente del color que se ve al desbloquear.
+#
+# Escribe ~/.cache/dashboard/paleta.json y lo imprime; Paleta.qml lo parsea.
 set -u
 CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/dashboard"
 mkdir -p "$CACHE"
 
 ruta=${1:-}
-if [[ -z $ruta ]]; then
-    ruta=$(qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+fondo_sh="$HOME/.local/share/plasma/shells/local.bloqueo/contents/lockscreen/fondo.sh"
+datos=""
+[[ -z $ruta && -f $fondo_sh ]] && datos=$(bash "$fondo_sh" 2>/dev/null)
+
+# ── Respaldo: sin la pantalla de bloqueo instalada (o con un fondo dado a mano),
+#    se saca la paleta aquí mismo, con el mismo formato que fondo.sh ──────────
+if [[ $datos != *'"paleta"'* ]]; then
+    if [[ -z $ruta ]]; then
+        ruta=$(qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
 var d = desktops()[0];
 var plugin = d.wallpaperPlugin;
 d.currentConfigGroup = ["Wallpaper", plugin, "General"];
 print((plugin == "org.kde.image" ? d.readConfig("Image") : d.readConfig("LastVideo")));
 ' 2>/dev/null | sed 's|^file://||')
+    fi
+    [[ -n $ruta && -e $ruta ]] || exit 1
+
+    marco="$CACHE/marco.jpg"
+    case ${ruta,,} in
+        *.mp4|*.webm|*.mkv|*.mov) ffmpegthumbnailer -i "$ruta" -o "$marco" -s 480 -t 35% -q 8 &>/dev/null ;;
+        *) magick "${ruta}[0]" -resize 480x480 "$marco" &>/dev/null ;;
+    esac
+    [[ -s $marco ]] || exit 1
+
+    paleta=$(magick "$marco" -resize 96x96 -colors 12 -format %c histogram:info:- 2>/dev/null \
+        | sort -rn | grep -o '#[0-9A-Fa-f]\{6\}' | sed 's/.*/"&"/' | paste -sd,)
+
+    ajustes="$HOME/.config/bloqueo-colores"
+    eleccion=$(sed -n 1p "$ajustes" 2>/dev/null); propio=$(sed -n 2p "$ajustes" 2>/dev/null)
+    [[ $eleccion == auto || $eleccion =~ ^#[0-9a-fA-F]{6}$ ]] || eleccion=auto
+    [[ $propio =~ ^#[0-9a-fA-F]{6}$ ]] || propio=
+    datos=$(printf '{"paleta":[%s],"eleccion":"%s","propio":"%s"}' "$paleta" "$eleccion" "$propio")
 fi
-[[ -n $ruta && -e $ruta ]] || exit 1
 
-marco="$CACHE/marco.jpg"
-case ${ruta,,} in
-    *.mp4|*.webm|*.mkv|*.mov) ffmpegthumbnailer -i "$ruta" -o "$marco" -s 480 -t 35% -q 8 &>/dev/null ;;
-    *) magick "${ruta}[0]" -resize 480x480 "$marco" &>/dev/null ;;
-esac
-[[ -s $marco ]] || exit 1
+DATOS="$datos" CACHE="$CACHE" python3 -c '
+import colorsys, json, os
 
-magick "$marco" -resize 96x96 -colors 24 -depth 8 -format %c histogram:info: |
-awk '{ n=$1; sub(":","",n); for(i=2;i<=NF;i++) if($i ~ /^#[0-9A-Fa-f]{6}/){ print n, substr($i,2,6); break } }' |
-python3 -c '
-import sys, colorsys, json, os
-mejor=None; top=-1
-for linea in sys.stdin:
-    n,hx = linea.split()
-    r,g,b = (int(hx[i:i+2],16)/255 for i in (0,2,4))
-    h,s,v = colorsys.rgb_to_hsv(r,g,b)
-    p = int(n) * (s**2) * (v if v<0.9 else 0.5)
-    if p > top: top, mejor = p, (h,s,v)
-if mejor is None: mejor=(0.08,0.6,0.8)
-h,s,v = mejor
-s = max(s,0.55); v = max(v,0.72)
-def hx(h,s,v):
-    r,g,b = colorsys.hsv_to_rgb(h,s,v)
-    return "#%02x%02x%02x" % (round(r*255),round(g*255),round(b*255))
-def hxa(a,h,s_,v):
-    r,g,b = colorsys.hsv_to_rgb(h,s_,v)
-    return "#%02x%02x%02x%02x" % (round(a*255),round(r*255),round(g*255),round(b*255))
-# Blanco y negro: del fondo solo se hereda un tinte mínimo para que no quede plano.
-t = 0.05
+d = json.loads(os.environ["DATOS"] or "{}")
+
+def hsl(hx):
+    r, g, b = (int(hx[i:i+2], 16) / 255 for i in (1, 3, 5))
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    return h, s, l
+
+def rgb(h, s, l):
+    return colorsys.hls_to_rgb(h, l, s)
+
+def hx(h, s, l, a=None):
+    r, g, b = rgb(h, s, l)
+    c = "#%02x%02x%02x" % tuple(round(v * 255) for v in (r, g, b))
+    return c if a is None else "#%02x%s" % (round(a * 255), c[1:])
+
+# ── El acento, igual que en LockScreenUi.qml ────────────────────────────────
+def avivar(h, s, l):
+    # Un gris se deja gris; lo demás se sube a color vivo y claro.
+    return h, (s if s < 0.06 else max(s, 0.5)), min(0.82, max(0.7, l))
+
+def tono_fondo(paleta):
+    # El tono más vivo del fondo, primando los que más abundan (van ordenados).
+    mejor, top = None, -1
+    for i, c in enumerate(paleta):
+        try: h, s, l = hsl(c)
+        except Exception: continue
+        p = s * (1 if 0.15 < l < 0.9 else 0.3) / (1 + 0.15 * i)
+        if p > top: top, mejor = p, (h, s, l)
+    return avivar(*mejor) if mejor else hsl("#b4befe")
+
+eleccion = d.get("eleccion") or "auto"
+propio   = d.get("propio") or ""
+if eleccion == "auto":
+    h, s, l = tono_fondo(d.get("paleta") or [])
+else:
+    h, s, l = hsl(eleccion)      # color elegido a mano: tal cual, sin avivar
+
+def tinte(base, a):
+    # Qt.tint(base, acento con alfa a): mezcla lineal hacia el acento.
+    br, bg, bb = (int(base[i:i+2], 16) / 255 for i in (1, 3, 5))
+    ar, ag, ab = rgb(h, s, l)
+    m = [b * (1 - a) + c * a for b, c in ((br, ar), (bg, ag), (bb, ab))]
+    return "#%02x%02x%02x" % tuple(round(v * 255) for v in m)
+
+# Cristal esmerilado teñido: el acento manda, el texto lleva solo un velo de él
+# (los mismos pesos que usa el bloqueo: 0.12 el texto, 0.30 el apagado).
+sc = min(s, 0.35)
 paleta = {
-  "acento":  hx(h,t,0.95),
-  "suave":   hx(h,t,0.82),
-  "fondo":   hxa(0.40,h,t*2,0.03),
-  "tarjeta": hxa(0.10,h,0.0,1.0),
-  "hueco":   hxa(0.12,h,0.0,1.0),
-  "borde":   hxa(0.15,h,0.0,1.0),
-  "texto":   hx(h,t*0.5,0.96),
-  "tenue":   hx(h,t,0.62),
+  "acento":  hx(h, s, l),
+  "suave":   hx(h, s * 0.75, max(0.0, l - 0.10)),
+  "fondo":   hx(h, min(s, 0.25), 0.035, 0.40),
+  "tarjeta": hx(h, sc * 0.6, 0.92, 0.10),
+  "hueco":   hx(h, sc * 0.7, 0.93, 0.12),
+  "borde":   hx(h, sc,       0.94, 0.15),
+  "texto":   tinte("#eceef6", 0.12),
+  "tenue":   tinte("#9ba0b4", 0.30),
 }
-ruta = os.path.expanduser(os.environ.get("XDG_CACHE_HOME","~/.cache") + "/dashboard/paleta.json")
-open(ruta,"w").write(json.dumps(paleta, indent=1))
-print(json.dumps(paleta, indent=1))
+salida = json.dumps(paleta, indent=1)
+open(os.path.join(os.environ["CACHE"], "paleta.json"), "w").write(salida)
+print(salida)
 '
