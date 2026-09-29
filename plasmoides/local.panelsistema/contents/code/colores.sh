@@ -47,7 +47,7 @@ print((plugin == "org.kde.image" ? d.readConfig("Image") : d.readConfig("LastVid
     datos=$(printf '{"paleta":[%s],"eleccion":"%s","propio":"%s"}' "$paleta" "$eleccion" "$propio")
 fi
 
-DATOS="$datos" CACHE="$CACHE" python3 -c '
+salida=$(DATOS="$datos" CACHE="$CACHE" python3 -c '
 import colorsys, json, os
 
 d = json.loads(os.environ["DATOS"] or "{}")
@@ -113,4 +113,16 @@ paleta = {
 salida = json.dumps(paleta, indent=1)
 open(os.path.join(os.environ["CACHE"], "paleta.json"), "w").write(salida)
 print(salida)
-'
+')
+[[ -n $salida ]] || exit 1
+printf '%s\n' "$salida"
+
+# El mismo acento al esquema de color de Plasma: ventanas, barras de título,
+# menú de inicio, notificaciones y apps de KDE. Va en segundo plano y con la
+# salida cerrada para no hacer esperar a quien nos llamó.
+acento=$(printf '%s' "$salida" | sed -n 's/.*"acento": *"\(#[0-9a-fA-F]\{6\}\)".*/\1/p')
+aqui=$(dirname "$(readlink -f "$0")")
+if [[ -n $acento && -f $aqui/tema-sistema.sh ]]; then
+    setsid bash "$aqui/tema-sistema.sh" "$acento" >/dev/null 2>&1 &
+fi
+exit 0

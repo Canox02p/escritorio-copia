@@ -87,9 +87,18 @@ echo "==> Copiando el estilo de Plasma"
 mkdir -p "$ESTILOS"
 for e in "$AQUI"/estilo/*; do
     [ -d "$e" ] || continue
+    [ "$(basename "$e")" = esquemas ] && continue   # no es un tema, va aparte
     cp -r "$e" "$ESTILOS/"
     echo "    $(basename "$e")"
 done
+
+# Plantilla del esquema de color: tema-sistema.sh la tiñe con el acento del
+# bloqueo para las ventanas, el menú de inicio y el fondo de los paneles.
+if [ -d "$AQUI/estilo/esquemas" ]; then
+    mkdir -p "$HOME/.local/share/color-schemes"
+    cp "$AQUI"/estilo/esquemas/*.colors "$HOME/.local/share/color-schemes/"
+    echo "    esquemas de color (plantilla del acento)"
+fi
 
 if $TODO; then
     echo "==> Restaurando paneles, atajos y ajustes"

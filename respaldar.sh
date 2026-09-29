@@ -20,6 +20,14 @@ find "$AQUI/plasmoides" -name __pycache__ -type d -prune -exec rm -rf {} +
 echo "==> Estilo de Plasma propio"
 rm -rf "$AQUI/estilo"; mkdir -p "$AQUI/estilo"
 [ -d "$ESTILOS/cristal" ] && cp -r "$ESTILOS/cristal" "$AQUI/estilo/" && echo "    cristal"
+# La plantilla del esquema de color: de aquí saca tema-sistema.sh el esquema
+# teñido con el acento. Sin ella no hay de dónde partir en otra máquina.
+# (AcentoBloqueo.colors NO se guarda: se genera solo.)
+if [ -f "$HOME/.local/share/color-schemes/noctalia.colors" ]; then
+    mkdir -p "$AQUI/estilo/esquemas"
+    cp "$HOME/.local/share/color-schemes/noctalia.colors" "$AQUI/estilo/esquemas/"
+    echo "    noctalia.colors (plantilla del acento)"
+fi
 
 echo "==> Pantalla de bloqueo propia"
 rm -rf "$AQUI/bloqueo"; mkdir -p "$AQUI/bloqueo"

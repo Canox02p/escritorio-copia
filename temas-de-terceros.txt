@@ -28,6 +28,7 @@ Overload
 Otto
 
 ## color-schemes
+AcentoBloqueo.colors
 noctalia.colors
 Otto.colors
 
