@@ -48,6 +48,19 @@ Item {
         return m + ":" + String(s % 60).padStart(2, "0")
     }
 
+    // El gato de la tarjeta estrecha de Inicio: al lado de la carátula no cabe,
+    // así que se sienta en la esquina de abajo.
+    Gato {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 2
+        anchors.bottomMargin: 2
+        alto: 24
+        visible: musica.hay && musica.grande && musica.estrecho
+        tocando: musica.sonando
+        energia: corona.grave
+    }
+
     // Sin reproductor
     ColumnLayout {
         anchors.centerIn: parent
@@ -156,12 +169,27 @@ Item {
         Item { Layout.fillHeight: true }
 
         Item {
+            id: marcoCaratula
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: musica.lado + 40
             Layout.preferredHeight: musica.lado + 40
 
+            // El bongo cat, al lado de la carátula. Golpea con los graves de lo
+            // que suena. En la tarjeta estrecha de Inicio no cabe aquí: ahí va
+            // el de abajo a la derecha.
+            Gato {
+                anchors.left: parent.right
+                anchors.leftMargin: 4
+                anchors.verticalCenter: parent.verticalCenter
+                alto: Math.round(musica.lado * 0.42)
+                visible: !musica.estrecho
+                tocando: musica.sonando
+                energia: corona.grave
+            }
+
             // Corona de barras que responde a lo que suena
             Visualizador {
+                id: corona
                 anchors.centerIn: parent
                 p: musica.p
                 dirCodigo: musica.dirCodigo
@@ -280,5 +308,18 @@ Item {
         }
 
         Item { Layout.fillHeight: true }
+    }
+
+    // El mismo gato para la tarjeta estrecha de Inicio, donde al lado de la
+    // carátula no hay sitio: se sienta en la esquina de abajo.
+    Gato {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 6
+        anchors.bottomMargin: 4
+        alto: 26
+        visible: musica.grande && musica.hay && musica.estrecho
+        tocando: musica.sonando
+        energia: corona.grave
     }
 }
