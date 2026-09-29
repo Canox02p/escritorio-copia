@@ -26,7 +26,6 @@ FocusScope {
     // un qml6 suelto sobre layer-shell), así que se lee el json a pelo.
     property color tinta:   "#f2f2f4"
     property color acento:  "#f2f2f4"
-    Component.onCompleted: raiz.leerPaleta()
     function leerPaleta() {
         const aqui = Qt.resolvedUrl(".").toString()
         const casa = aqui.substring(0, aqui.indexOf("/.local/"))
@@ -182,7 +181,7 @@ FocusScope {
     // que durante un momento no se le hace caso o roba el foco de salida.
     Timer { interval: 600; running: true; onTriggered: raiz.ratonListo = true }
 
-    Component.onCompleted: cargar()
+    Component.onCompleted: { raiz.leerPaleta(); cargar() }
 
     // ---------------------------------------------------------------- fondo
 

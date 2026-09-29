@@ -21,16 +21,21 @@ acento=${1:-}
 
 CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/dashboard"
 mkdir -p "$CACHE"
-plantilla="$HOME/.local/share/color-schemes/noctalia.colors"
-destino="$HOME/.local/share/color-schemes/AcentoBloqueo.colors"
+esquemas="$HOME/.local/share/color-schemes"
+plantilla="$esquemas/noctalia.colors"
+# Dos nombres que se van turnando: ver más abajo por qué.
+actual=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
+[[ $actual == AcentoBloqueoA ]] && nombre=AcentoBloqueoB || nombre=AcentoBloqueoA
+otro=$([[ $nombre == AcentoBloqueoA ]] && echo AcentoBloqueoB || echo AcentoBloqueoA)
+destino="$esquemas/$nombre.colors"
 marca="$CACHE/tema-sistema.marca"
 [[ -f $plantilla ]] || exit 0
 
 exec 9>"$CACHE/tema-sistema.lock"
 flock -n 9 || exit 0                      # otro widget está en ello
-[[ -f $marca && $(<"$marca") == "$acento" && -f $destino ]] && exit 0
+[[ -f $marca && $(<"$marca") == "$acento" && $actual == AcentoBloqueo? ]] && exit 0
 
-PLANTILLA="$plantilla" DESTINO="$destino" ACENTO="$acento" python3 -c '
+PLANTILLA="$plantilla" DESTINO="$destino" ACENTO="$acento" NOMBRE="$nombre" python3 -c '
 import colorsys, os, re
 
 def hsl(hx):
@@ -76,8 +81,8 @@ def tenir(m):
         return m.group(0)
     if ll >= 0.5:
         return m.group(1) + rgb(h, TEXTO, ll)
-    if ll < 0.02:           # los negros puros se quedan negros
-        return m.group(0)
+    if ll < 0.02:           # el negro puro no admite tono: se sube un poco
+        return m.group(1) + rgb(h, FONDO, 0.055)
     return m.group(1) + rgb(h, FONDO, ll + SUBIDA)
 
 salida, grupo = [], ""
@@ -89,20 +94,28 @@ for linea in texto.splitlines(True):
     salida.append(linea)
 texto = "".join(salida)
 
-texto = texto.replace("ColorScheme=Noctalia", "ColorScheme=AcentoBloqueo")
+texto = texto.replace("ColorScheme=Noctalia", "ColorScheme=" + os.environ["NOMBRE"])
 texto = texto.replace("Name=noctalia", "Name=Acento del bloqueo")
 open(os.environ["DESTINO"], "w").write(texto)
 ' || exit 0
 
 # plasma-apply-colorscheme no hace nada si el esquema ya es el activo, así que
-# los cambios de color dentro del MISMO esquema no llegaban nunca a kdeglobals.
-# Se borra antes el nombre para que se vea obligado a volcarlo entero; si la
-# aplicación falla se repone, que un kdeglobals sin esquema se nota mucho.
-anterior=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
-kwriteconfig6 --file kdeglobals --group General --key ColorScheme "" 2>/dev/null
-if ! plasma-apply-colorscheme AcentoBloqueo >/dev/null 2>&1; then
-    [ -n "$anterior" ] && kwriteconfig6 --file kdeglobals --group General --key ColorScheme "$anterior" 2>/dev/null
+# los cambios de color dentro del MISMO esquema no llegaban a kdeglobals. La
+# primera idea fue vaciar General/ColorScheme para obligarlo, y **eso estaba
+# mal**: durante ese instante no hay esquema, y cualquier app que arranque (o
+# que recargue) se queda con los colores por defecto de Breeze y ya no vuelve
+# —le pasó al Monitor del sistema—. Por eso se turnan dos nombres,
+# AcentoBloqueoA y AcentoBloqueoB: cada vez es un esquema distinto de verdad,
+# así que siempre se aplica y nunca hay un hueco sin esquema.
+# El "color de acento" de Plasma (General/AccentColor) pisa al esquema: si está
+# puesto, DecorationFocus y la selección se quedan con ÉL y el cambio de color no
+# se ve entero (pasó: quedó uno viejo de una prueba y el menú de inicio seguía
+# con el color anterior). Aquí manda el esquema, así que se quita.
+kwriteconfig6 --file kdeglobals --group General --key AccentColor --delete 2>/dev/null
+
+if ! plasma-apply-colorscheme "$nombre" >/dev/null 2>&1; then
     exit 0
 fi
+rm -f "$esquemas/$otro.colors" "$esquemas/AcentoBloqueo.colors"
 printf '%s' "$acento" > "$marca"
 exit 0
