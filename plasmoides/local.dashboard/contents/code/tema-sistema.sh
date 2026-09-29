@@ -96,8 +96,13 @@ open(os.environ["DESTINO"], "w").write(texto)
 
 # plasma-apply-colorscheme no hace nada si el esquema ya es el activo, así que
 # los cambios de color dentro del MISMO esquema no llegaban nunca a kdeglobals.
-# Se borra antes el nombre para que se vea obligado a volcarlo entero.
+# Se borra antes el nombre para que se vea obligado a volcarlo entero; si la
+# aplicación falla se repone, que un kdeglobals sin esquema se nota mucho.
+anterior=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null)
 kwriteconfig6 --file kdeglobals --group General --key ColorScheme "" 2>/dev/null
-plasma-apply-colorscheme AcentoBloqueo >/dev/null 2>&1
+if ! plasma-apply-colorscheme AcentoBloqueo >/dev/null 2>&1; then
+    [ -n "$anterior" ] && kwriteconfig6 --file kdeglobals --group General --key ColorScheme "$anterior" 2>/dev/null
+    exit 0
+fi
 printf '%s' "$acento" > "$marca"
 exit 0
