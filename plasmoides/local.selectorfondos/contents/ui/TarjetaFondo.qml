@@ -13,6 +13,7 @@ Item {
     property real inclinacion: 0.26
     property real anchoNormal: 132
     property real anchoFoco: 560
+    property color acento: "#f2f2f4"
 
     signal elegida()
     signal apuntada()
@@ -124,7 +125,7 @@ Item {
         color: "transparent"
         antialiasing: true
         border.width: tarjeta.esActual ? 2 : 1
-        border.color: tarjeta.esActual ? "#f2f2f4"
+        border.color: tarjeta.esActual ? tarjeta.acento
                                        : Qt.rgba(1, 1, 1, tarjeta.foco ? 0.3 : 0.12)
         transform: Matrix4x4 { matrix: tarjeta.corte }
     }
@@ -182,7 +183,7 @@ Item {
                 id: letra
                 anchors.centerIn: parent
                 text: "✓ actual"
-                color: "#f2f2f4"
+                color: tarjeta.acento
                 font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 11
             }

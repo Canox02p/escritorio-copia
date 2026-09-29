@@ -115,7 +115,7 @@ PlasmoidItem {
                     width: 14; height: 14
                     source: trozo.icono
                     isMask: true
-                    color: trozo.encendido ? paleta.acento : paleta.texto
+                    color: paleta.acento
                     opacity: toque.containsMouse ? 1 : (trozo.encendido ? 0.95 : 0.78)
                     Behavior on opacity { NumberAnimation { duration: 140 } }
                     Behavior on color { ColorAnimation { duration: 180 } }

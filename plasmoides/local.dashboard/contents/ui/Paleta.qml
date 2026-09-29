@@ -21,6 +21,7 @@ Item {
     property color borde:   "#26ffffff"
     property color texto:   "#f4f4f6"
     property color tenue:   "#9a9aa2"
+    property color reloj:   "#e4e7f2"
 
     readonly property color sobreAcento: Qt.hsva(0, 0, acento.hsvValue > 0.6 ? 0.1 : 0.98, 1)
 
@@ -37,6 +38,7 @@ Item {
     Behavior on borde   { enabled: paleta.animar; ColorAnimation { duration: 450; easing.type: Easing.OutCubic } }
     Behavior on texto   { enabled: paleta.animar; ColorAnimation { duration: 450; easing.type: Easing.OutCubic } }
     Behavior on tenue   { enabled: paleta.animar; ColorAnimation { duration: 450; easing.type: Easing.OutCubic } }
+    Behavior on reloj   { enabled: paleta.animar; ColorAnimation { duration: 450; easing.type: Easing.OutCubic } }
 
     P5Support.DataSource {
         id: lector
@@ -78,6 +80,7 @@ Item {
             const c = JSON.parse(salida)
             acento = c.acento; suave = c.suave; fondo = c.fondo; tarjeta = c.tarjeta
             hueco = c.hueco; borde = c.borde; texto = c.texto; tenue = c.tenue
+            if (c.reloj) reloj = c.reloj
             animar = true
         } catch (e) { }
     }

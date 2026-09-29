@@ -16,7 +16,7 @@ PlasmoidItem {
     readonly property var barrasVacias: new Array(numBarras).fill(0)
     property var barras: barrasVacias
 
-    readonly property string colorArriba: "#e93d82"
+    Paleta { id: p; dirCodigo: root.dirCodigo }
 
     Plasmoid.icon: "view-media-visualization"
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground | PlasmaCore.Types.ConfigurableBackground
@@ -98,7 +98,7 @@ PlasmoidItem {
 
         readonly property real radio: Kirigami.Units.gridUnit * 0.9
         readonly property real relleno: Kirigami.Units.largeSpacing * 1.5
-        readonly property color tenue: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.12)
+        readonly property color tenue: p.velo(0.12)
         readonly property string arte: root.hayMusica ? (root.reproductor.artUrl || "") : ""
 
         Layout.preferredWidth: Kirigami.Units.gridUnit * 36
@@ -110,7 +110,7 @@ PlasmoidItem {
         Rectangle {
             anchors.fill: parent
             radius: vista.radio
-            color: Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 0.75)
+            color: Qt.rgba(p.fondo.r, p.fondo.g, p.fondo.b, 0.75)
         }
         Image {
             id: arteFondo
@@ -146,7 +146,7 @@ PlasmoidItem {
             anchors.fill: parent
             radius: vista.radio
             color: "transparent"
-            border.color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.1)
+            border.color: p.borde
         }
 
         ColumnLayout {
@@ -181,8 +181,8 @@ PlasmoidItem {
                                 radius: Math.min(width / 2, Kirigami.Units.smallSpacing)
                                 opacity: 0.35 + 0.65 * Math.min(1, height / parent.height * 1.5)
                                 gradient: Gradient {
-                                    GradientStop { position: 0; color: root.colorArriba }
-                                    GradientStop { position: 1; color: Kirigami.Theme.highlightColor }
+                                    GradientStop { position: 0; color: Qt.lighter(p.acento, 1.25) }
+                                    GradientStop { position: 1; color: p.acento }
                                 }
                                 Behavior on height { NumberAnimation { duration: 50 } }
                             }
@@ -212,7 +212,7 @@ PlasmoidItem {
                         width: parent.width * progreso.fraccion
                         height: parent.height
                         radius: height / 2
-                        color: Kirigami.Theme.highlightColor
+                        color: p.acento
                     }
                     MouseArea {
                         id: zonaProgreso
@@ -232,13 +232,15 @@ PlasmoidItem {
                     PlasmaComponents3.Label {
                         text: root.hayMusica ? root.tiempo(root.reproductor.position) : ""
                         font: Kirigami.Theme.smallFont
-                        opacity: 0.7
+                        color: p.tenue
+                        opacity: 0.9
                     }
                     Item { Layout.fillWidth: true }
                     PlasmaComponents3.Label {
                         text: root.hayMusica ? root.tiempo(root.reproductor.length) : ""
                         font: Kirigami.Theme.smallFont
-                        opacity: 0.7
+                        color: p.tenue
+                        opacity: 0.9
                     }
                 }
             }

@@ -21,7 +21,28 @@ FocusScope {
     property int indiceAlta: -1            // a cuál se le carga ya la imagen original
     property bool ratonListo: false        // el puntero no manda hasta que se asienta
 
-    readonly property color tinta:   "#f2f2f4"
+    // Los colores salen de la misma paleta que el resto del escritorio, la que
+    // colores.sh deja en la caché. Aquí no hay plasma5support (esto corre como
+    // un qml6 suelto sobre layer-shell), así que se lee el json a pelo.
+    property color tinta:   "#f2f2f4"
+    property color acento:  "#f2f2f4"
+    Component.onCompleted: raiz.leerPaleta()
+    function leerPaleta() {
+        const aqui = Qt.resolvedUrl(".").toString()
+        const casa = aqui.substring(0, aqui.indexOf("/.local/"))
+        if (casa === "") return
+        const x = new XMLHttpRequest()
+        x.onreadystatechange = function () {
+            if (x.readyState !== XMLHttpRequest.DONE) return
+            try {
+                const c = JSON.parse(x.responseText)
+                raiz.tinta = c.texto
+                raiz.acento = c.acento
+            } catch (e) { }
+        }
+        x.open("GET", casa + "/.cache/dashboard/paleta.json")
+        x.send()
+    }
     readonly property color barra:   Qt.rgba(0.09, 0.09, 0.10, 0.88)
     readonly property real  alto:    Math.round(height * 0.44)
     readonly property real  anchoFoco: Math.round(alto * 1.42)
@@ -291,7 +312,7 @@ FocusScope {
                         radius: 8
                         color: modelData.hex
                         border.width: activo || zona.containsMouse ? 2 : 0
-                        border.color: raiz.tinta
+                        border.color: raiz.acento
                         scale: activo ? 1.06 : (zona.containsMouse ? 1.12 : 1)
                         Behavior on scale { NumberAnimation { duration: 120 } }
 
@@ -335,7 +356,7 @@ FocusScope {
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 13
                             selectByMouse: true
-                            selectionColor: Qt.rgba(1, 1, 1, 0.25)
+                            selectionColor: Qt.rgba(raiz.acento.r, raiz.acento.g, raiz.acento.b, 0.35)
                             onTextChanged: raiz.busqueda = text
                         }
                     }
@@ -374,6 +395,7 @@ FocusScope {
                     id: repetidor
                     model: raiz.visibles
                     delegate: TarjetaFondo {
+                        acento: raiz.acento
                         required property var modelData
                         required property int index
                         height: raiz.alto

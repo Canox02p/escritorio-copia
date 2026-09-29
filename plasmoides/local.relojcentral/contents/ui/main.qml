@@ -8,6 +8,9 @@ import org.kde.kirigami as Kirigami
 PlasmoidItem {
     id: root
 
+    readonly property string dirCodigo: decodeURIComponent(Qt.resolvedUrl("../code/").toString().replace(/^file:\/\//, ""))
+    Paleta { id: p; dirCodigo: root.dirCodigo }
+
     property date ahora: new Date()
 
     Plasmoid.icon: "clock"
@@ -38,7 +41,7 @@ PlasmoidItem {
             font.pixelSize: 1000
             font.family: Kirigami.Theme.defaultFont.family
             font.weight: Font.Light
-            color: "white"
+            color: p.reloj
 
             layer.enabled: true
             layer.effect: MultiEffect {

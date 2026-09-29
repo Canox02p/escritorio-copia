@@ -9,6 +9,9 @@ import org.kde.kirigami as Kirigami
 PlasmoidItem {
     id: root
 
+    readonly property string dirCodigo: decodeURIComponent(Qt.resolvedUrl("../code/").toString().replace(/^file:\/\//, ""))
+    Paleta { id: p; dirCodigo: root.dirCodigo }
+
     readonly property bool vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property int tam: Math.round(Kirigami.Units.gridUnit * 1.5)
     property real acumulado: 0
@@ -68,8 +71,8 @@ PlasmoidItem {
                             anchors.fill: parent
                             anchors.margins: 2
                             radius: width / 2
-                            color: boton.actual ? Kirigami.Theme.textColor
-                                 : zona.containsMouse ? Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
+                            color: boton.actual ? p.acento
+                                 : zona.containsMouse ? p.velo(0.15)
                                  : "transparent"
                             scale: boton.actual ? 1 : (zona.pressed ? 0.9 : 1)
                             Behavior on color { ColorAnimation { duration: 150 } }
@@ -84,7 +87,7 @@ PlasmoidItem {
                             font.pixelSize: Math.round(root.tam * 0.5)
                             font.weight: boton.actual ? Font.DemiBold : Font.Medium
                             font.letterSpacing: 0.4
-                            color: boton.actual ? Kirigami.Theme.backgroundColor : Kirigami.Theme.textColor
+                            color: boton.actual ? p.sobreAcento : p.texto
                             opacity: boton.actual ? 1 : 0.6
                             Behavior on opacity { NumberAnimation { duration: 140 } }
                         }

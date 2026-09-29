@@ -11,6 +11,7 @@ PlasmoidItem {
     id: root
 
     readonly property string dirCodigo: decodeURIComponent(Qt.resolvedUrl("../code/").toString().replace(/^file:\/\//, ""))
+    Paleta { id: p; dirCodigo: root.dirCodigo }
     property var fondos: []
     property string actual: ""
     property bool cargando: false
@@ -115,7 +116,7 @@ PlasmoidItem {
         Layout.minimumHeight: Kirigami.Units.gridUnit * 16
         spacing: Kirigami.Units.largeSpacing
 
-        readonly property color tenue: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.2)
+        readonly property color tenue: p.velo(0.2)
 
         // Barra de filtros
         Rectangle {
@@ -124,8 +125,8 @@ PlasmoidItem {
             implicitWidth: filtros.implicitWidth + Kirigami.Units.largeSpacing * 2
             implicitHeight: filtros.implicitHeight + Kirigami.Units.smallSpacing * 2
             radius: height / 2
-            color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.07)
-            border.color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.12)
+            color: p.velo(0.07)
+            border.color: p.borde
 
             RowLayout {
                 id: filtros
@@ -170,7 +171,7 @@ PlasmoidItem {
                         radius: Kirigami.Units.smallSpacing * 1.5
                         color: modelData.hex
                         border.width: activo ? 2 : 0
-                        border.color: Kirigami.Theme.textColor
+                        border.color: p.texto
                         scale: activo || zonaChip.containsMouse ? 1.18 : 1
                         Behavior on scale { NumberAnimation { duration: 120 } }
 
@@ -301,7 +302,7 @@ PlasmoidItem {
                             color: "transparent"
                             antialiasing: true
                             border.width: tarjeta.esActual ? 3 : (sobre.hovered ? 2 : 1)
-                            border.color: tarjeta.esActual ? Kirigami.Theme.highlightColor
+                            border.color: tarjeta.esActual ? p.acento
                                                            : Qt.rgba(1, 1, 1, sobre.hovered ? 0.85 : 0.18)
                             transform: Matrix4x4 { matrix: cuerpo.corte }
                         }

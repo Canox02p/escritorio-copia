@@ -133,6 +133,7 @@ ForegroundPositive=231,185,213
 ForegroundVisited=225,224,249
 
 [General]
+AccentColor=233,157,124
 ColorScheme=noctalia
 ColorSchemeHash=962d56bf4ef41f3d0c36ba6438b97d18221b7b69
 Name=noctalia

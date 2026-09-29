@@ -60,7 +60,7 @@ GridLayout {
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: inicio.partesHora[0]
-                color: inicio.p.texto
+                color: inicio.p.reloj
                 font.pixelSize: 46
                 font.weight: Font.Bold
             }
@@ -75,7 +75,7 @@ GridLayout {
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: inicio.partesHora[1]
-                color: inicio.p.texto
+                color: inicio.p.reloj
                 font.pixelSize: 46
                 font.weight: Font.Bold
             }

@@ -94,18 +94,21 @@ def tinte(base, a):
     m = [b * (1 - a) + c * a for b, c in ((br, ar), (bg, ag), (bb, ab))]
     return "#%02x%02x%02x" % tuple(round(v * 255) for v in m)
 
-# Cristal esmerilado teñido: el acento manda, el texto lleva solo un velo de él
-# (los mismos pesos que usa el bloqueo: 0.12 el texto, 0.30 el apagado).
-sc = min(s, 0.35)
+# Cristal esmerilado teñido. El bloqueo se permite velos flojos (0.12 el texto)
+# porque allí hay mucha superficie a todo color; aquí casi todo se pinta con
+# `texto`, así que con un 12 % el escritorio seguía viéndose blanco. Se sube el
+# tinte de toda la paleta para que el color se note de verdad.
+sc = min(s, 0.55)
 paleta = {
   "acento":  hx(h, s, l),
   "suave":   hx(h, s * 0.75, max(0.0, l - 0.10)),
-  "fondo":   hx(h, min(s, 0.25), 0.035, 0.40),
-  "tarjeta": hx(h, sc * 0.6, 0.92, 0.10),
-  "hueco":   hx(h, sc * 0.7, 0.93, 0.12),
-  "borde":   hx(h, sc,       0.94, 0.15),
-  "texto":   tinte("#eceef6", 0.12),
-  "tenue":   tinte("#9ba0b4", 0.30),
+  "fondo":   hx(h, min(s, 0.35), 0.05, 0.42),
+  "tarjeta": hx(h, sc * 0.8, 0.90, 0.11),
+  "hueco":   hx(h, sc * 0.9, 0.91, 0.13),
+  "borde":   hx(h, sc,       0.92, 0.20),
+  "texto":   tinte("#eceef6", 0.22),
+  "tenue":   tinte("#9ba0b4", 0.50),
+  "reloj":   tinte("#e4e7f2", 0.55),   # los relojes grandes, como en el bloqueo
 }
 salida = json.dumps(paleta, indent=1)
 open(os.path.join(os.environ["CACHE"], "paleta.json"), "w").write(salida)

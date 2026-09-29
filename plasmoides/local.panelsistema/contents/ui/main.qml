@@ -79,7 +79,7 @@ PlasmoidItem {
 
                 Text {
                     text: parent.etiqueta
-                    color: Kirigami.Theme.textColor
+                    color: paleta.acento
                     opacity: tira.containsMouse ? 1 : 0.72
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 12
@@ -89,7 +89,7 @@ PlasmoidItem {
                 }
                 Text {
                     text: parent.valor
-                    color: Kirigami.Theme.textColor
+                    color: paleta.texto
                     opacity: tira.containsMouse ? 1 : 0.86
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 12
