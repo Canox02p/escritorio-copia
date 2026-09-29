@@ -10,9 +10,9 @@ Item {
     property int nivel: 100            // 0..100
     property bool cargando: false
     property color tinta: "white"      // normalmente el acento
-    // El rayo de carga va SIEMPRE en verde limón, pase lo que pase con el acento:
+    // El rayo de carga va SIEMPRE en blanco, pase lo que pase con el acento:
     // así se ve de un vistazo que está cargando.
-    readonly property color verdeLima: "#2fee7c"
+    readonly property color rayoColor: "#ffffff"
     property color aviso: "#f5a3b5"    // queda poca y no está enchufada
 
     readonly property bool bajo: nivel <= 20 && !cargando
@@ -76,6 +76,6 @@ Item {
         text: ""                 // rayo de la Nerd Font
         font.family: "JetBrainsMono Nerd Font"
         font.pixelSize: Math.round(pila.height * 0.82)
-        color: pila.verdeLima
+        color: pila.rayoColor
     }
 }
