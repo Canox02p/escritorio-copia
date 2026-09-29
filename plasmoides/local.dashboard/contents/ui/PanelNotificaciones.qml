@@ -10,7 +10,16 @@ Item {
     property var p
     readonly property int cuantas: lista.count
 
-    function limpiar() { modelo.clear(NM.Notifications.ClearExpired) }
+    // clear() solo tiene la bandera ClearExpired: se lleva las caducadas y deja
+    // intactas las que siguen vivas (las urgentes no caducan nunca por su
+    // cuenta). Así que primero las caducamos a mano, de la última a la primera.
+    function limpiar() {
+        for (let i = modelo.count - 1; i >= 0; --i) {
+            const idx = modelo.index(i, 0)
+            if (idx.valid) modelo.expire(idx)
+        }
+        modelo.clear(NM.Notifications.ClearExpired)
+    }
 
     NM.Notifications {
         id: modelo

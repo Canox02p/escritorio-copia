@@ -206,7 +206,7 @@ immutability=1
 plugin=local.panelsistema
 
 [Containments][98][Applets][99][Configuration]
-popupHeight=520
+popupHeight=421
 popupWidth=500
 
 [Containments][98][Applets][99][Configuration][ConfigDialog]
