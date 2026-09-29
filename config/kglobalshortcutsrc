@@ -5,7 +5,7 @@ switch-to-activity-05041ca2-2c86-4ee6-998c-65f8b08e5a62=none,none,Cambiar a la a
 [KDE Keyboard Layout Switcher]
 Switch to Last-Used Keyboard Layout=Meta+Alt+L,Meta+Alt+L,Cambiar a la última distribución de teclado usada
 Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,Cambiar a la siguiente distribución de teclado
-_k_friendly_name=Selector de distribución del teclado
+_k_friendly_name=Selector de distribución de teclado
 
 [kaccess]
 Toggle Screen Reader On and Off=Meta+Alt+S,Meta+Alt+S,Activar o desactivar el lector de pantalla
@@ -32,7 +32,7 @@ LogOut=none,none,Cerrar sesión
 Reboot=none,none,Reiniciar
 Reboot Without Confirmation=none,none,Reiniciar sin confirmación
 Shut Down=none,none,Apagar
-_k_friendly_name=Gestión de la sesión
+_k_friendly_name=Gestión de sesiones
 
 [kwin]
 Activate Window Demanding Attention=Meta+Ctrl+A,Meta+Ctrl+A,Activar la ventana que necesite atención

@@ -19,6 +19,7 @@ GridBorderActivate=5
 [Effect-translucency]
 ComboboxPopups=80
 Dialogs=82
+Inactive=90
 Menus=70
 MoveResize=72
 

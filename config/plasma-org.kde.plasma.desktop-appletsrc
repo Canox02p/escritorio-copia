@@ -69,7 +69,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=luisbocanegra.smart.video.wallpaper.reborn
 
 [Containments][27][ConfigDialog]
 DialogHeight=630
@@ -80,13 +80,13 @@ lastResolution=1745x982
 sortMode=-1
 
 [Containments][27][Wallpaper][luisbocanegra.smart.video.wallpaper.reborn][General]
-LastVideo=file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4
-LastVideoPosition=0
+LastVideo=file://__HOME__/Imágenes/wallpapers/38d9dc3350_cozy-lofi-relaxing-rainy-day-aesthetic.mp4
+LastVideoPosition=2333
 MuteMode=5
-VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
+VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/38d9dc3350_cozy-lofi-relaxing-rainy-day-aesthetic.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][27][Wallpaper][org.kde.image][General]
-Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
+Image=file://__HOME__/Imágenes/colores-en-ondas-en-movimiento_3840x2160_xtrafondos.com.jpg
 
 [Containments][28]
 activityId=
@@ -181,16 +181,16 @@ immutability=1
 lastScreen=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=luisbocanegra.smart.video.wallpaper.reborn
 
 [Containments][96][Wallpaper][luisbocanegra.smart.video.wallpaper.reborn][General]
-LastVideo=file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4
+LastVideo=file://__HOME__/Imágenes/wallpapers/38d9dc3350_cozy-lofi-relaxing-rainy-day-aesthetic.mp4
 LastVideoPosition=0
 MuteMode=5
-VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/5baac92b61_tanjiro-kamado-crimson-moon-live-wallpaper-wallsflow-com.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
+VideoUrls=[{"filename":"file://__HOME__/Imágenes/wallpapers/38d9dc3350_cozy-lofi-relaxing-rainy-day-aesthetic.mp4","enabled":true,"duration":0,"customDuration":0,"playbackRate":0,"alternativePlaybackRate":0,"loop":true}]
 
 [Containments][96][Wallpaper][org.kde.image][General]
-Image=file://__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
+Image=file://__HOME__/Imágenes/colores-en-ondas-en-movimiento_3840x2160_xtrafondos.com.jpg
 
 [Containments][98]
 activityId=
