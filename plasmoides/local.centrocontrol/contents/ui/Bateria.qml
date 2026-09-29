@@ -12,7 +12,7 @@ Item {
     property color tinta: "white"      // normalmente el acento
     // El rayo de carga va SIEMPRE en verde limón, pase lo que pase con el acento:
     // así se ve de un vistazo que está cargando.
-    readonly property color verdeLima: "#36f23d"
+    readonly property color verdeLima: "#2fee7c"
     property color aviso: "#f5a3b5"    // queda poca y no está enchufada
 
     readonly property bool bajo: nivel <= 20 && !cargando
