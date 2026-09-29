@@ -28,17 +28,6 @@ Item {
     property var barras: vacias
     property double ultimoArranque: 0
 
-    // Energía de los graves (las primeras barras): con esto el gato golpea al
-    // ritmo en vez de a intervalo fijo.
-    readonly property real grave: {
-        const b = barras
-        if (!b || b.length === 0) return 0
-        const n = Math.min(4, b.length)
-        let suma = 0
-        for (let i = 0; i < n; ++i) suma += b[i]
-        return suma / n
-    }
-
     implicitWidth: circular ? radio * 2 + altoMaximo * 2
                             : numBarras * grosor + (numBarras - 1) * separacion
     implicitHeight: circular ? implicitWidth : altoMaximo

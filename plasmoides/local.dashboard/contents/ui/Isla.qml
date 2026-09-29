@@ -41,12 +41,6 @@ Item {
             NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
         }
 
-        Gato {
-            anchors.verticalCenter: parent.verticalCenter
-            alto: 20
-            tocando: isla.mostrando
-        }
-
         Kirigami.Icon {
             anchors.verticalCenter: parent.verticalCenter
             width: 13; height: 13
