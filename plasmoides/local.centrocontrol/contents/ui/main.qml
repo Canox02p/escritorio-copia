@@ -96,6 +96,8 @@ PlasmoidItem {
         component Trozo: Item {
             id: trozo
             property string icono: ""
+            property int pilaNivel: -1      // >= 0: dibuja la batería en vez del icono
+            property bool pilaCargando: false
             property string texto: ""
             property bool encendido: false
             property int destino: 0
@@ -112,6 +114,7 @@ PlasmoidItem {
 
                 Kirigami.Icon {
                     anchors.verticalCenter: parent.verticalCenter
+                    visible: trozo.pilaNivel < 0
                     width: 14; height: 14
                     source: trozo.icono
                     isMask: true
@@ -119,6 +122,16 @@ PlasmoidItem {
                     opacity: toque.containsMouse ? 1 : (trozo.encendido ? 0.95 : 0.78)
                     Behavior on opacity { NumberAnimation { duration: 140 } }
                     Behavior on color { ColorAnimation { duration: 180 } }
+                }
+
+                Bateria {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: trozo.pilaNivel >= 0
+                    nivel: trozo.pilaNivel
+                    cargando: trozo.pilaCargando
+                    tinta: paleta.acento
+                    opacity: toque.containsMouse ? 1 : 0.9
+                    Behavior on opacity { NumberAnimation { duration: 140 } }
                 }
 
                 Text {
@@ -174,7 +187,8 @@ PlasmoidItem {
             }
             Trozo {
                 visible: root.hayBateria
-                icono: root.enchufado ? "battery-full-charged-symbolic" : "battery-full-symbolic"
+                pilaNivel: root.carga
+                pilaCargando: root.enchufado
                 texto: root.carga + "%"
                 destino: 4
                 pista: root.enchufado ? "Enchufado · " + root.carga + "%" : "Batería " + root.carga + "%"

@@ -1,6 +1,6 @@
 # Fondos que usa este escritorio. Las imágenes no van en el repositorio:
 # son descargas, pesan y no son creación propia. Cópialas aparte.
-__HOME__/Imágenes/wallpapers/wp7378275-ps4-anime-scenery-wallpapers.jpg
+__HOME__/Imágenes/wallpapers/wp16434772-star-wars-red-4k-wallpapers.webp
 
 ## __HOME__/Imágenes/wallpapers  (15M)
 38d9dc3350_cozy-lofi-relaxing-rainy-day-aesthetic.mp4
