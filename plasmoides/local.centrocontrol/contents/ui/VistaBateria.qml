@@ -13,10 +13,30 @@ ColumnLayout {
 
     spacing: 10
 
+    // Igual que en main.qml: propiedades planas desde `onNewData`. Un enlace
+    // `energia.data["AC Adapter"]["Plugged in"]` se queda con el valor del
+    // arranque y nunca se entera de que desenchufaron.
+    property bool hay: false
+    property int carga: 0
+    property string estado: ""          // Charging / Discharging / FullyCharged / NoCharge
+    property bool acEnchufado: false
+
+    readonly property bool cargando: estado === "Charging"
+    readonly property bool enchufado: estado !== "" ? estado !== "Discharging" : acEnchufado
+
     P5Support.DataSource {
         id: energia
         engine: "powermanagement"
         connectedSources: ["Battery", "AC Adapter"]
+        onNewData: (fuente, datos) => {
+            if (fuente === "Battery") {
+                bat.hay = !!datos["Has Battery"]
+                bat.carga = datos["Percent"] || 0
+                bat.estado = datos["State"] || ""
+            } else if (fuente === "AC Adapter") {
+                bat.acEnchufado = !!datos["Plugged in"]
+            }
+        }
     }
 
     P5Support.DataSource {
@@ -67,11 +87,6 @@ ColumnLayout {
 
     Timer { id: rearmar; interval: 400; onTriggered: bat.perfilVigilar() }
 
-    readonly property var datos: energia.data["Battery"] || ({})
-    readonly property bool hay: !!datos["Has Battery"]
-    readonly property int carga: datos["Percent"] || 0
-    readonly property bool enchufado: !!(energia.data["AC Adapter"] || {})["Plugged in"]
-    readonly property string estado: datos["State"] || ""
 
     function consultar() { ejecutar.connectSource("bash '" + dirCodigo + "bateria.sh'") }
     Component.onCompleted: { consultar(); perfilLeer(); perfilVigilar() }
@@ -95,7 +110,8 @@ ColumnLayout {
             anchors.leftMargin: 18
             anchors.verticalCenter: parent.verticalCenter
             width: 34; height: 34
-            source: bat.enchufado ? "battery-full-charged-symbolic" : "battery-full-symbolic"
+            source: bat.cargando ? "battery-full-charging-symbolic"
+                  : bat.enchufado ? "battery-full-charged-symbolic" : "battery-full-symbolic"
             isMask: true
             color: bat.p.acento
         }
@@ -128,7 +144,7 @@ ColumnLayout {
                     Text {
                         id: etiquetaEstado
                         anchors.centerIn: parent
-                        text: bat.enchufado ? "ENCHUFADO" : "CON BATERÍA"
+                        text: bat.cargando ? "CARGANDO" : bat.enchufado ? "ENCHUFADO" : "CON BATERÍA"
                         color: bat.p.texto
                         font.pixelSize: 9
                         font.weight: Font.DemiBold

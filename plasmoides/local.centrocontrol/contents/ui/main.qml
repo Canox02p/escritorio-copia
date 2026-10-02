@@ -60,15 +60,37 @@ PlasmoidItem {
                                        : simboloRed.connecting ? "Conectando…"
                                        : hayEnlace ? "Conectado, pero sin internet" : "Sin conexión"
 
+    // Lo de la energía se guarda en propiedades planas desde `onNewData` y NO con
+    // enlaces del estilo `energia.data["AC Adapter"]["Plugged in"]`: ese segundo
+    // corchete lee ya un mapa normal, sin aviso de cambio, así que el enlace se
+    // quedaba clavado con el valor del arranque (si plasmashell arrancaba
+    // enchufado, la tira seguía diciendo "enchufado" y con el rayo puesto).
+    property bool hayBateria: false
+    property int carga: 0
+    property string estadoPila: ""      // Charging / Discharging / FullyCharged / NoCharge
+    property bool acEnchufado: false
+
+    // El rayo solo mientras entra corriente de verdad.
+    readonly property bool cargando: estadoPila === "Charging"
+    // Enchufado es todo lo que no sea descargando: también cuando ya está llena
+    // o cuando el tope de carga la tiene parada. Si el estado viniera vacío, se
+    // cae de vuelta al adaptador.
+    readonly property bool enchufado: estadoPila !== "" ? estadoPila !== "Discharging" : acEnchufado
+
     P5Support.DataSource {
         id: energia
         engine: "powermanagement"
         connectedSources: ["Battery", "AC Adapter"]
+        onNewData: (fuente, datos) => {
+            if (fuente === "Battery") {
+                root.hayBateria = !!datos["Has Battery"]
+                root.carga = datos["Percent"] || 0
+                root.estadoPila = datos["State"] || ""
+            } else if (fuente === "AC Adapter") {
+                root.acEnchufado = !!datos["Plugged in"]
+            }
+        }
     }
-    readonly property var bateria: energia.data["Battery"] || ({})
-    readonly property bool hayBateria: !!bateria["Has Battery"]
-    readonly property int carga: bateria["Percent"] || 0
-    readonly property bool enchufado: !!(energia.data["AC Adapter"] || {})["Plugged in"]
 
     function abrir(i) {
         if (root.expanded && root.seccion === i) {
@@ -188,10 +210,12 @@ PlasmoidItem {
             Trozo {
                 visible: root.hayBateria
                 pilaNivel: root.carga
-                pilaCargando: root.enchufado
+                pilaCargando: root.cargando
                 texto: root.carga + "%"
                 destino: 4
-                pista: root.enchufado ? "Enchufado · " + root.carga + "%" : "Batería " + root.carga + "%"
+                pista: root.cargando ? "Cargando · " + root.carga + "%"
+                       : root.enchufado ? "Enchufado · " + root.carga + "%"
+                       : "Batería " + root.carga + "%"
             }
             Trozo {
                 icono: "system-shutdown"
