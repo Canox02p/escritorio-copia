@@ -101,6 +101,7 @@ Rectangle {
                                     Behavior on color { ColorAnimation { duration: 180 } }
                                 }
                                 Text {
+                                    font.family: "JetBrainsMono Nerd Font"
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     text: pestana.modelData.texto
                                     color: pestana.tinta
@@ -205,6 +206,7 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             color: clips.cuantas > 0 ? tablero.p.acento : tablero.p.velo(0.1)
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 id: cuentaClip
                                 anchors.centerIn: parent
                                 text: clips.cuantas
@@ -214,6 +216,7 @@ Rectangle {
                             }
                         },
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             anchors.verticalCenter: parent.verticalCenter
                             text: "LIMPIAR"
                             color: limpiaClip.containsMouse ? tablero.p.acento : tablero.p.velo(0.35)

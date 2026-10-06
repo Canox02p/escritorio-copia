@@ -15,6 +15,7 @@ Item {
     opacity: encendido ? 1 : 0.4
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         id: rotulo
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter

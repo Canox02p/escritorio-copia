@@ -20,7 +20,7 @@ Bluetooth y reinicio forzado).
 | `config/` | Copia de los ajustes: paneles, atajos, reglas de ventanas, esquema de color, bloqueo (`kscreenlockerrc`), el color elegido en el bloqueo (`bloqueo-colores`), cursor (`kcminputrc`), avisos, energía, apariencia de GTK y la disposición de pantallas (`kwinoutputconfig.json`, sólo de consulta) |
 | `widgets-de-terceros.txt` | Los widgets que **no** son míos y hay que bajar de la tienda |
 | `temas-de-terceros.txt` | Iconos, temas de Plasma, decoraciones y esquemas de color que tampoco son míos: se bajan de *Obtener nuevos…* |
-| `fondos.txt` | Qué fondos usa el escritorio y dónde están. Las imágenes y los vídeos no se suben: pesan y son descargas |
+| `fondos.txt` | Qué fondos usa el escritorio y dónde están. **No va al repositorio** (está en `.gitignore`): lo genera `respaldar.sh` para consulta en el propio equipo, porque lista los nombres de los archivos de esa carpeta. Los fondos tampoco se suben: pesan y son descargas |
 | `instalar.sh` | Deja todo esto en un equipo nuevo |
 | `respaldar.sh` | Vuelve a volcar aquí el escritorio actual (ejecutar tras cada cambio) |
 

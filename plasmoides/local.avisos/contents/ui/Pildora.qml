@@ -27,6 +27,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         id: etiqueta
         anchors.centerIn: parent
         text: pildora.texto

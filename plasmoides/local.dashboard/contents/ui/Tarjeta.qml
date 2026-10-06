@@ -59,6 +59,7 @@ Rectangle {
         }
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.verticalCenter: parent.verticalCenter
             text: tarjeta.titulo
             color: tarjeta.p.texto

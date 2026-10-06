@@ -72,6 +72,7 @@ Item {
                 Layout.fillWidth: true
                 spacing: 1
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     text: "BLUETOOTH"
                     color: vista.p.texto
                     font.pixelSize: 13
@@ -79,6 +80,7 @@ Item {
                     font.letterSpacing: 1.4
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     width: parent.width
                     text: !vista.adaptador ? "Sin adaptador"
                           : (!vista.encendido ? "Apagado"
@@ -190,6 +192,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 2
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             width: parent.width
                             text: (fila.aparato && (fila.aparato.name || fila.aparato.address)) || ""
                             color: vista.p.texto
@@ -198,6 +201,7 @@ Item {
                             elide: Text.ElideRight
                         }
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             width: parent.width
                             text: fila.conectado ? "CONECTADO" : (fila.emparejado ? "EMPAREJADO" : "SIN EMPAREJAR")
                             color: fila.conectado ? vista.p.acento : vista.p.tenue
@@ -215,6 +219,7 @@ Item {
                         spacing: 8
 
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             anchors.verticalCenter: parent.verticalCenter
                             text: fila.aparato && fila.aparato.battery ? fila.aparato.battery.percentage + "%" : ""
                             color: vista.p.tenue
@@ -282,6 +287,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         anchors.centerIn: parent
         visible: !vista.encendido || filas.count === 0
         text: !vista.adaptador ? "Este equipo no tiene Bluetooth"

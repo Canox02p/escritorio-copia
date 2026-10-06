@@ -93,6 +93,7 @@ Item {
                 Layout.fillWidth: true
                 spacing: 1
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     text: "REDES"
                     color: vista.p.texto
                     font.pixelSize: 13
@@ -100,6 +101,7 @@ Item {
                     font.letterSpacing: 1.4
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     width: parent.width
                     text: estado.activeConnections !== "" ? estado.activeConnections : "Sin conexión"
                     color: vista.p.tenue
@@ -145,6 +147,7 @@ Item {
             Behavior on Layout.preferredHeight { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.fill: parent
                 anchors.leftMargin: 10
                 anchors.rightMargin: 10
@@ -221,17 +224,41 @@ Item {
                             onTapped: vista.abierta = fila.desplegada ? "" : fila.clave
                         }
 
-                        Kirigami.Icon {
+                        // El wifi va dibujado (Wifi.qml): los iconos de red de
+                        // Papirus-Dark son un abanico macizo y con isMask salen
+                        // como un rombo. El cable sí se coge del tema.
+                        Item {
                             id: senal
                             anchors.left: parent.left
                             anchors.leftMargin: 13
                             anchors.verticalCenter: parent.verticalCenter
                             width: 18; height: 18
-                            source: fila.model.ConnectionIcon || "network-wireless-symbolic"
-                            isMask: true
-                            color: fila.conectada ? vista.p.acento : vista.p.texto
-                            opacity: fila.conectada ? 1 : 0.75
-                            Behavior on color { ColorAnimation { duration: 180 } }
+
+                            readonly property bool inalambrica: (fila.model.ConnectionIcon || "").indexOf("wireless") >= 0
+                            readonly property color tinta: fila.conectada ? vista.p.acento : vista.p.texto
+
+                            Wifi {
+                                anchors.centerIn: parent
+                                visible: senal.inalambrica
+                                width: 17; height: 14
+                                // en la lista no se pone aspa: los arcos ya enseñan
+                                // la fuerza de cada red
+                                nivel: fila.model.Signal !== undefined ? fila.model.Signal : 100
+                                conectado: true
+                                tinta: senal.tinta
+                                opacity: fila.conectada ? 1 : 0.75
+                                Behavior on tinta { ColorAnimation { duration: 180 } }
+                            }
+
+                            Kirigami.Icon {
+                                anchors.fill: parent
+                                visible: !senal.inalambrica
+                                source: fila.model.ConnectionIcon || "network-wired-symbolic"
+                                isMask: true
+                                color: senal.tinta
+                                opacity: fila.conectada ? 1 : 0.75
+                                Behavior on color { ColorAnimation { duration: 180 } }
+                            }
                         }
 
                         Column {
@@ -242,6 +269,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: 2
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 width: parent.width
                                 text: fila.nombre
                                 color: vista.p.texto
@@ -250,6 +278,7 @@ Item {
                                 elide: Text.ElideRight
                             }
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 width: parent.width
                                 text: fila.conectada ? "CONECTADA"
                                       : (fila.conectando ? "CONECTANDO…"
@@ -269,6 +298,7 @@ Item {
                             spacing: 8
 
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: fila.model.Signal !== undefined && fila.model.Signal > 0 ? fila.model.Signal + "%" : ""
                                 color: vista.p.tenue
@@ -308,6 +338,7 @@ Item {
                             Behavior on border.color { ColorAnimation { duration: 150 } }
 
                             TextInput {
+                                font.family: "JetBrainsMono Nerd Font"
                                 id: entradaClave
                                 anchors.fill: parent
                                 anchors.leftMargin: 12
@@ -319,6 +350,7 @@ Item {
                                 clip: true
                                 onAccepted: gestor.addAndActivateConnection(fila.model.DevicePath, fila.model.SpecificPath, text)
                                 Text {
+                                    font.family: "JetBrainsMono Nerd Font"
                                     anchors.fill: parent
                                     verticalAlignment: Text.AlignVCenter
                                     visible: entradaClave.text === ""
@@ -377,6 +409,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         anchors.centerIn: parent
         visible: !activadas.wirelessEnabled || filas.count === 0
         text: !activadas.wirelessEnabled ? "El wifi está apagado"

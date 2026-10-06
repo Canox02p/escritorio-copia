@@ -40,6 +40,7 @@ Item {
         }
 
         TextInput {
+            font.family: "JetBrainsMono Nerd Font"
             id: campo
             anchors {
                 left: lupa.right; leftMargin: 8
@@ -54,6 +55,7 @@ Item {
             clip: true
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.fill: parent
                 visible: campo.text === "" && !campo.activeFocus
                 text: "Buscar en el historial…"
@@ -80,6 +82,7 @@ Item {
             isMask: true
         }
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.horizontalCenter: parent.horizontalCenter
             text: campo.text !== "" ? "Sin coincidencias" : "Nada copiado todavía"
             color: panel.p.velo(0.32)
@@ -174,6 +177,7 @@ Item {
                         spacing: 6
                         visible: trozo.index === 0 || trozo.esImagen || trozo.esEnlace
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             text: trozo.index === 0 ? "EN EL PORTAPAPELES"
                                                     : (trozo.esImagen ? "IMAGEN" : "ENLACE")
                             color: panel.p.acento
@@ -184,6 +188,7 @@ Item {
                     }
 
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         width: parent.width
                         text: (trozo.model.display || "").replace(/\s+/g, " ").trim()
                         color: trozo.index === 0 ? panel.p.texto : panel.p.suave

@@ -37,6 +37,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         id: rotulo
         anchors.left: simbolo.right
         anchors.leftMargin: 10
@@ -50,6 +51,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.verticalCenter: rotulo.verticalCenter

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasma5support as P5Support
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.taskmanager as TaskManager
 import org.kde.kirigami as Kirigami
@@ -24,12 +25,33 @@ PlasmoidItem {
         id: escritorios
     }
 
+    // `VirtualDesktopInfo.requestActivate()` NO se puede llamar desde QML: en
+    // /usr/include/taskmanager/virtualdesktopinfo.h es un método público normal,
+    // sin Q_INVOKABLE y sin ser slot (solo `currentDesktopByScreenName` y
+    // `currentDesktopByScreenGeometry` lo llevan), así que el clic llamaba a una
+    // función que no existe y no pasaba nada. Las PROPIEDADES sí funcionan, por
+    // eso el número activo se resaltaba bien.
+    // Se cambia por D-Bus, que es lo que de verdad responde.
+    P5Support.DataSource {
+        id: ejecutor
+        engine: "executable"
+        connectedSources: []
+        // Desconectar al terminar: si no, cada clic deja la fuente colgada.
+        onNewData: fuente => ejecutor.disconnectSource(fuente)
+    }
+
+    // KWin numera los escritorios desde 1, igual que lo que se pinta.
+    function irA(numero) {
+        if (numero < 1 || numero > escritorios.numberOfDesktops) return
+        ejecutor.connectSource("gdbus call --session --dest org.kde.KWin"
+                               + " --object-path /KWin"
+                               + " --method org.kde.KWin.setCurrentDesktop " + numero)
+    }
+
     function mover(paso) {
         const ids = escritorios.desktopIds
         const i = ids.indexOf(escritorios.currentDesktop) + paso
-        if (i >= 0 && i < ids.length) {
-            escritorios.requestActivate(ids[i])
-        }
+        if (i >= 0 && i < ids.length) root.irA(i + 1)
     }
 
     fullRepresentation: Item {
@@ -97,7 +119,7 @@ PlasmoidItem {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: escritorios.requestActivate(boton.modelData)
+                            onClicked: root.irA(boton.index + 1)
                         }
                     }
                 }

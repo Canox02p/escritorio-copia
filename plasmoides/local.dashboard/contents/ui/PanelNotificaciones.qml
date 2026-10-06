@@ -46,6 +46,7 @@ Item {
             isMask: true
         }
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Todo al día"
             color: panel.p.velo(0.32)
@@ -96,6 +97,7 @@ Item {
                     Row {
                         spacing: 6
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             text: aviso.model.applicationName || ""
                             color: panel.p.acento
                             font.pixelSize: 10
@@ -103,6 +105,7 @@ Item {
                             font.letterSpacing: 0.6
                         }
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             text: aviso.model.created ? Qt.formatTime(aviso.model.created, "HH:mm") : ""
                             color: panel.p.velo(0.3)
                             font.pixelSize: 10
@@ -110,6 +113,7 @@ Item {
                     }
 
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         width: parent.width
                         text: aviso.model.summary || ""
                         color: panel.p.texto
@@ -120,6 +124,7 @@ Item {
                     }
 
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         width: parent.width
                         text: (aviso.model.body || "").replace(/<[^>]*>/g, "")
                         color: panel.p.tenue

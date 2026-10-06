@@ -119,6 +119,7 @@ ColumnLayout {
     }
 
     component Rotulo: Text {
+        font.family: "JetBrainsMono Nerd Font"
         color: audio.p.tenue
         font.pixelSize: 10
         font.weight: Font.DemiBold
@@ -209,6 +210,7 @@ ColumnLayout {
             }
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.left: simboloAparato.right
                 anchors.leftMargin: 10
                 anchors.right: marca.left
@@ -223,6 +225,7 @@ ColumnLayout {
             }
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 id: marca
                 anchors.right: parent.right
                 anchors.rightMargin: 12
@@ -264,6 +267,7 @@ ColumnLayout {
         }
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.centerIn: parent
             visible: programas.count === 0
             text: "Nada reproduciendo audio"

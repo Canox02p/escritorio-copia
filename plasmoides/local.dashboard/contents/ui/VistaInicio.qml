@@ -58,6 +58,7 @@ GridLayout {
             spacing: -6
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: inicio.partesHora[0]
                 color: inicio.p.reloj
@@ -65,6 +66,7 @@ GridLayout {
                 font.weight: Font.Bold
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "•  •  •"
                 color: inicio.p.velo(0.25)
@@ -73,6 +75,7 @@ GridLayout {
                 bottomPadding: 8
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: inicio.partesHora[1]
                 color: inicio.p.reloj
@@ -80,6 +83,7 @@ GridLayout {
                 font.weight: Font.Bold
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: inicio.partesHora[2]
                 color: inicio.p.suave
@@ -123,6 +127,7 @@ GridLayout {
 
         extra: [
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: "VER MÁS"
                 color: masMusica.containsMouse ? inicio.p.acento : inicio.p.velo(0.35)
@@ -145,6 +150,9 @@ GridLayout {
             p: inicio.p
             dirCodigo: inicio.dirCodigo
             grande: true
+            // Aquí la tarjeta es una columna estrecha y alta: apilado, no en
+            // fila (en fila se recortaban textos, mandos y barras).
+            columna: true
         }
     }
 
@@ -162,6 +170,7 @@ GridLayout {
 
         extra: [
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: "VER MÁS"
                 color: masClima.containsMouse ? inicio.p.acento : inicio.p.velo(0.35)
@@ -205,6 +214,7 @@ GridLayout {
                         opacity: 0.9
                     }
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         anchors.verticalCenter: parent.verticalCenter
                         text: inicio.clima.temp !== undefined ? inicio.clima.temp + "°C" : "—"
                         color: inicio.p.texto
@@ -214,6 +224,7 @@ GridLayout {
                 }
 
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     text: inicio.clima.desc || ""
@@ -246,6 +257,7 @@ GridLayout {
                 anchors.verticalCenter: parent.verticalCenter
                 color: avisos.cuantas > 0 ? inicio.p.acento : inicio.p.velo(0.1)
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     id: cuenta
                     anchors.centerIn: parent
                     text: avisos.cuantas
@@ -255,6 +267,7 @@ GridLayout {
                 }
             },
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: "LIMPIAR"
                 color: limpia.containsMouse ? inicio.p.acento : inicio.p.velo(0.35)

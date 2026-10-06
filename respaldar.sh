@@ -143,7 +143,7 @@ echo "==> Fondos en uso (las imágenes no se suben)"
     done
 } > "$AQUI/fondos.txt"
 sed -i "s|$HOME|__HOME__|g" "$AQUI/fondos.txt"   # aquí también sobra la ruta personal
-echo "    fondos.txt"
+echo "    fondos.txt (sólo local: lleva los nombres de tus archivos y no se sube)"
 
 echo
 echo "Listo. Respaldo actualizado en $AQUI"

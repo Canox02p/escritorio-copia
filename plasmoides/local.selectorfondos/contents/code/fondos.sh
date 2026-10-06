@@ -50,7 +50,8 @@ print("actual\t" + (plugin == "org.kde.image" ? d.readConfig("Image") : d.readCo
 ' 2>/dev/null | sed 's|^actual\tfile://|actual\t|'
 echo
 
-# Carpeta propia para fondos: lo que sea que meta ahí, incluso en subcarpetas
+# ÚNICA fuente de fondos: ~/Imágenes/wallpapers (incluidas sus subcarpetas).
+# No se busca en ningún otro sitio: ni ~/Vídeos, ni ~/Imágenes, ni /usr/share/wallpapers.
 while IFS= read -r -d "" f; do
     n=${f##*/}
     case ${f,,} in
@@ -58,30 +59,4 @@ while IFS= read -r -d "" f; do
         *.jpg|*.jpeg|*.png|*.webp|*.avif|*.bmp|*.gif|*.jxl|*.tif|*.tiff)
                                                    emitir imagen "$f" "${n%.*}" ;;
     esac
-done < <(find "$HOME/Imágenes/wallpapers" "$HOME/Pictures/wallpapers" -type f -print0 2>/dev/null)
-
-for dir in "$HOME/Vídeos" "$HOME/Videos"; do
-    for f in "$dir"/*.{mp4,webm,mkv,mov}; do
-        n=${f##*/}; emitir video "$f" "${n%.*}"
-    done
-done
-
-for dir in "$HOME/Imágenes" "$HOME/Imágenes/Fondos" "$HOME/Pictures/Fondos"; do
-    for f in "$dir"/*.{jpg,jpeg,png,webp}; do
-        n=${f##*/}; emitir imagen "$f" "${n%.*}"
-    done
-done
-
-for f in /usr/share/wallpapers/cachyos-wallpapers/*.{jpg,jpeg,png,webp}; do
-    n=${f##*/}
-    [[ $n == *splash* ]] && continue
-    emitir imagen "$f" "${n%.*}"
-done
-
-# Paquetes de fondos de KDE: se usa la imagen de mayor resolución de cada uno
-for dir in /usr/share/wallpapers/*/contents/images; do
-    f=$(ls -1 "$dir" | sort -V | tail -n1)
-    [[ -n $f ]] || continue
-    nombre=${dir%/contents/images}
-    emitir imagen "$dir/$f" "${nombre##*/}"
-done
+done < <(find "$HOME/Imágenes/wallpapers" -type f -print0 2>/dev/null)

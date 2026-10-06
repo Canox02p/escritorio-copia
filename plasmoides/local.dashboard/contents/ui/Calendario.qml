@@ -40,6 +40,7 @@ ColumnLayout {
         spacing: 6
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             text: motor.monthName.charAt(0).toUpperCase() + motor.monthName.slice(1) + " " + motor.year
             color: cal.p.texto
             font.pixelSize: 15
@@ -62,6 +63,7 @@ ColumnLayout {
                 radius: 11
                 color: sobre.containsMouse ? cal.p.velo(0.12) : "transparent"
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.centerIn: parent
                     text: parent.modelData.t
                     color: cal.p.texto
@@ -136,6 +138,7 @@ ColumnLayout {
                     Behavior on color { ColorAnimation { duration: 120 } }
 
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         anchors.centerIn: parent
                         text: celda.model.dayNumber
                         color: celda.esHoy ? cal.p.sobreAcento

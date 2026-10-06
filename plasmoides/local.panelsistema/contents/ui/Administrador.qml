@@ -318,6 +318,7 @@ Rectangle {
                                     Row {
                                         spacing: 6
                                         Text {
+                                            font.family: "JetBrainsMono Nerd Font"
                                             anchors.baseline: cifraTxt.baseline
                                             text: pestana.modelData.texto
                                             color: pestana.tinta
@@ -391,6 +392,7 @@ Rectangle {
             }
 
             TextInput {
+                font.family: "JetBrainsMono Nerd Font"
                 id: entrada
                 anchors.left: lupa.right
                 anchors.leftMargin: 9
@@ -405,6 +407,7 @@ Rectangle {
                 Keys.onEscapePressed: text = ""
 
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     visible: entrada.text === ""
                     text: "Buscar por nombre o PID…"
@@ -414,6 +417,7 @@ Rectangle {
             }
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 id: resumen
                 anchors.right: limpiar.visible ? limpiar.left : parent.right
                 anchors.rightMargin: limpiar.visible ? 8 : 12
@@ -457,6 +461,7 @@ Rectangle {
 
             component Cabeza: Text {
                 property int indice: -1
+                font.family: admin.mono
                 readonly property bool activa: admin.orden === indice
                 Layout.preferredWidth: admin.anchoPct
                 horizontalAlignment: Text.AlignRight
@@ -506,6 +511,7 @@ Rectangle {
                         Behavior on color { ColorAnimation { duration: 140 } }
 
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             id: rotuloCat
                             anchors.centerIn: parent
                             text: pastilla.modelData
@@ -565,6 +571,7 @@ Rectangle {
                 width: lista.width - 10
                 height: 26
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.left: parent.left
                     anchors.leftMargin: 4
                     anchors.bottom: parent.bottom
@@ -688,6 +695,7 @@ Rectangle {
                             width: parent.width
                             spacing: 6
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 id: rotulo
                                 width: Math.min(implicitWidth, parent.width - (numero.visible ? numero.width + 6 : 0))
                                 text: fila.nombre
@@ -760,6 +768,7 @@ Rectangle {
                                 opacity: boton.rojo || sobreFila.containsMouse ? 1 : 0.55
                             }
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 id: aviso
                                 anchors.centerIn: parent
                                 visible: fila.preguntando
@@ -792,6 +801,7 @@ Rectangle {
             }
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.centerIn: parent
                 visible: filas.count === 0
                 text: admin.datos ? "Nada coincide con «" + admin.filtro + "»" : "Leyendo procesos…"

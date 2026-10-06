@@ -42,6 +42,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 2
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 text: boton.texto
                 color: boton.tinta
                 font.pixelSize: 12
@@ -49,6 +50,7 @@ Rectangle {
                 font.letterSpacing: 0.8
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 text: boton.detalle
                 color: boton.encendido ? Qt.rgba(0, 0, 0, 0.55) : boton.p.tenue
                 font.pixelSize: 10

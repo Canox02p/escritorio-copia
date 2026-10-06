@@ -57,6 +57,7 @@ Rectangle {
         z: 10
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             id: etiqueta
             anchors.centerIn: parent
             text: boton.pista

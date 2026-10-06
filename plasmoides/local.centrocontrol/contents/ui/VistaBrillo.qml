@@ -71,6 +71,7 @@ ColumnLayout {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         Layout.fillWidth: true
         Layout.topMargin: 4
         visible: !teclado.isBrightnessAvailable

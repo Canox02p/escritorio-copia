@@ -9,14 +9,21 @@ Rectangle {
     property var p: paletaPropia
     property string dirCodigo: ""
     property int vista: 0
+    // Carga real para dibujar la pila de la pestaña BATERÍA (la da main.qml)
+    property int pilaNivel: 100
+    property bool pilaCargando: false
     signal cerrar()
+    // Las pestañas PIDEN el cambio; no escriben `vista` directamente, porque una
+    // asignación imperativa rompería el enlace `vista: root.seccion` de main.qml
+    // y los iconos de la tira dejarían de poder elegir pestaña.
+    signal elegir(int indice)
 
     readonly property var pestanas: [
-        { icono: "network-wireless",                     texto: "RED" },
+        { icono: "network-wireless", dibujoWifi: true,   texto: "RED" },
         { icono: "bluetooth-symbolic",                   texto: "BLUETOOTH" },
         { icono: "audio-volume-high",                    texto: "AUDIO" },
         { icono: "brightness-high-symbolic",             texto: "BRILLO" },
-        { icono: "battery-full-symbolic",                texto: "BATERÍA" },
+        { icono: "battery-full-symbolic", dibujoPila: true, texto: "BATERÍA" },
         { icono: "system-shutdown",                      texto: "SESIÓN" }
     ]
 
@@ -93,15 +100,47 @@ Rectangle {
                                 scale: sobre.containsMouse && !pestana.activa ? 1.06 : 1
                                 Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
-                                Kirigami.Icon {
+                                // La de RED va dibujada (Wifi.qml): el icono de wifi
+                                // de Papirus-Dark es un abanico macizo y con isMask
+                                // se lee como un rombo. La de BATERÍA también
+                                // (Bateria.qml, la misma de la tira) y con la carga
+                                // real, en vez de la pila siempre llena del tema.
+                                Item {
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     width: 17; height: 17
-                                    source: pestana.modelData.icono
-                                    isMask: true
-                                    color: pestana.tinta
-                                    Behavior on color { ColorAnimation { duration: 180 } }
+
+                                    Wifi {
+                                        anchors.centerIn: parent
+                                        visible: !!pestana.modelData.dibujoWifi
+                                        width: 17; height: 14
+                                        nivel: 100
+                                        tinta: pestana.tinta
+                                        Behavior on tinta { ColorAnimation { duration: 180 } }
+                                    }
+
+                                    Bateria {
+                                        anchors.centerIn: parent
+                                        visible: !!pestana.modelData.dibujoPila
+                                        width: 22; height: 12
+                                        nivel: centro.pilaNivel
+                                        cargando: centro.pilaCargando
+                                        tinta: pestana.tinta
+                                        // Sobre la pastilla del acento el rosa de aviso
+                                        // no se leería: ahí sigue la tinta de la pestaña.
+                                        aviso: pestana.activa ? pestana.tinta : "#f5a3b5"
+                                    }
+
+                                    Kirigami.Icon {
+                                        anchors.fill: parent
+                                        visible: !pestana.modelData.dibujoWifi && !pestana.modelData.dibujoPila
+                                        source: pestana.modelData.icono
+                                        isMask: true
+                                        color: pestana.tinta
+                                        Behavior on color { ColorAnimation { duration: 180 } }
+                                    }
                                 }
                                 Text {
+                                    font.family: "JetBrainsMono Nerd Font"
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     text: pestana.modelData.texto
                                     color: pestana.tinta
@@ -117,7 +156,7 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: centro.vista = pestana.index
+                                onClicked: centro.elegir(pestana.index)
                             }
                         }
                     }

@@ -39,7 +39,7 @@ PlasmoidItem {
             fontSizeMode: Text.Fit
             minimumPixelSize: 12
             font.pixelSize: 1000
-            font.family: Kirigami.Theme.defaultFont.family
+            font.family: "JetBrainsMono Nerd Font"
             font.weight: Font.Light
             color: p.reloj
 

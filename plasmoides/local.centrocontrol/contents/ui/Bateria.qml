@@ -18,6 +18,10 @@ Item {
     readonly property bool bajo: nivel <= 20 && !cargando
     readonly property color color1: bajo ? aviso : tinta
     readonly property real fraccion: Math.min(100, Math.max(0, nivel)) / 100
+    // Todo va en proporción al alto, tomando como medida los 12 px de la tira
+    // (u = 1 ahí, y salen los mismos números de siempre). Así se puede poner
+    // grande sin `scale`, que la pintaba escalonada.
+    readonly property real u: height / 12
 
     implicitWidth: 22
     implicitHeight: 12
@@ -25,11 +29,11 @@ Item {
     // ---- Cuerpo ----
     Rectangle {
         id: cuerpo
-        width: parent.width - 3
+        width: parent.width - 3 * pila.u
         height: parent.height
-        radius: 3.5
+        radius: 3.5 * pila.u
         color: "transparent"
-        border.width: 1.3
+        border.width: 1.3 * pila.u
         border.color: pila.color1
         Behavior on border.color { ColorAnimation { duration: 250 } }
 
@@ -37,8 +41,8 @@ Item {
         // detrás y el dibujo no se queda en dos rayas sueltas.
         Rectangle {
             anchors.fill: parent
-            anchors.margins: 2
-            radius: 1.6
+            anchors.margins: 2 * pila.u
+            radius: 1.6 * pila.u
             color: pila.color1
             opacity: 0.18
             Behavior on color { ColorAnimation { duration: 250 } }
@@ -48,10 +52,10 @@ Item {
         Rectangle {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 2
-            width: Math.max(0, (parent.width - 4) * pila.fraccion)
-            height: parent.height - 4
-            radius: 1.6
+            anchors.leftMargin: 2 * pila.u
+            width: Math.max(0, (parent.width - 4 * pila.u) * pila.fraccion)
+            height: parent.height - 4 * pila.u
+            radius: 1.6 * pila.u
             color: pila.color1
             Behavior on color { ColorAnimation { duration: 250 } }
             Behavior on width { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
@@ -62,9 +66,9 @@ Item {
     Rectangle {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: 2.5
+        width: 2.5 * pila.u
         height: parent.height * 0.42
-        radius: 1.2
+        radius: 1.2 * pila.u
         color: pila.color1
         Behavior on color { ColorAnimation { duration: 250 } }
     }

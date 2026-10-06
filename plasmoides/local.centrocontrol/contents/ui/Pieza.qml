@@ -36,6 +36,7 @@ Rectangle {
                 visible: pieza.icono !== ""
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: pieza.titulo
                 color: pieza.p.tenue

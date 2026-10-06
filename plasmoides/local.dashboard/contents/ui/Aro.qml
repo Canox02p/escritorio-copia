@@ -74,6 +74,7 @@ Item {
         }
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.horizontalCenter: parent.horizontalCenter
             text: aro.cifra
             visible: text !== ""
@@ -82,6 +83,7 @@ Item {
             font.weight: Font.DemiBold
         }
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.horizontalCenter: parent.horizontalCenter
             text: aro.rotulo
             color: aro.p ? aro.p.tenue : "gray"

@@ -5,7 +5,7 @@ switch-to-activity-05041ca2-2c86-4ee6-998c-65f8b08e5a62=none,none,Cambiar a la a
 [KDE Keyboard Layout Switcher]
 Switch to Last-Used Keyboard Layout=Meta+Alt+L,Meta+Alt+L,Cambiar a la última distribución de teclado usada
 Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,Cambiar a la siguiente distribución de teclado
-_k_friendly_name=Selector de distribución de teclado
+_k_friendly_name=Selector de distribución del teclado
 
 [kaccess]
 Toggle Screen Reader On and Off=Meta+Alt+S,Meta+Alt+S,Activar o desactivar el lector de pantalla
@@ -32,7 +32,7 @@ LogOut=none,none,Cerrar sesión
 Reboot=none,none,Reiniciar
 Reboot Without Confirmation=none,none,Reiniciar sin confirmación
 Shut Down=none,none,Apagar
-_k_friendly_name=Gestión de sesiones
+_k_friendly_name=Gestión de la sesión
 
 [kwin]
 Activate Window Demanding Attention=Meta+Ctrl+A,Meta+Ctrl+A,Activar la ventana que necesite atención
@@ -123,7 +123,7 @@ Walk Through Windows of Current Application Alternative=none,none,Recorrer las v
 Walk Through Windows of Current Application Alternative (Reverse)=none,none,Recorrer las ventanas de la aplicación actual de modo alternativo (hacia atrás)
 Window Above Other Windows=none,none,Mantener la ventana sobre las demás
 Window Below Other Windows=none,none,Mantener la ventana bajo las demás
-Window Close=Alt+F4,Alt+F4,Cerrar la ventana
+Window Close=Alt+F4\tMeta+Q,Alt+F4,Cerrar la ventana
 Window Custom Quick Tile Bottom=none,none,Situar ventana en mosaico personalizado en la parte inferior
 Window Custom Quick Tile Left=none,none,Situar ventana en mosaico personalizado a la izquierda
 Window Custom Quick Tile Right=none,none,Situar ventana en mosaico personalizado a la derecha
@@ -266,7 +266,7 @@ cycle-panels=Meta+Alt+P,Meta+Alt+P,Mover el foco del teclado entre paneles
 cycleNextAction=none,none,Siguiente elemento del historial
 cyclePrevAction=none,none,Anterior elemento del historial
 edit_clipboard=none,none,Editar el contenido…
-manage activities=Meta+Q,Meta+Q,Mostrar el selector de actividad
+manage activities=none,Meta+Q,Mostrar el selector de actividad
 next activity=Meta+A,none,Recorrer las actividades
 previous activity=Meta+Shift+A,none,Recorrer las actividades (en orden inverso)
 repeat_action=none,none,Invocar manualmente la acción en el portapapeles actual

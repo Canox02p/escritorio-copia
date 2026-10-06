@@ -193,6 +193,7 @@ PlasmoidItem {
                 }
 
                 PlasmaComponents3.TextField {
+                    font.family: "JetBrainsMono Nerd Font"
                     Layout.preferredWidth: Kirigami.Units.gridUnit * 9
                     placeholderText: "Buscar…"
                     onTextChanged: root.busqueda = text
@@ -337,6 +338,7 @@ PlasmoidItem {
                             Behavior on opacity { NumberAnimation { duration: 160 } }
 
                             PlasmaComponents3.Label {
+                                font.family: "JetBrainsMono Nerd Font"
                                 Layout.fillWidth: true
                                 text: tarjeta.modelData.nombre
                                 color: "white"
@@ -350,7 +352,8 @@ PlasmoidItem {
                                 text: "✓ Actual"
                                 color: "white"
                                 opacity: 0.85
-                                font: Kirigami.Theme.smallFont
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pointSize: Kirigami.Theme.smallFont.pointSize
                                 horizontalAlignment: Text.AlignHCenter
                             }
                         }

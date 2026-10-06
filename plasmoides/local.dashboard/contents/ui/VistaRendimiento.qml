@@ -22,6 +22,7 @@ ColumnLayout {
         p: rend.p
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             id: rotuloUso
             anchors.right: parent.right
             anchors.top: parent.top
@@ -43,6 +44,7 @@ ColumnLayout {
             border.color: rend.p.velo(0.06)
 
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.centerIn: parent
                 text: Math.round(uso) + "%"
                 color: rend.p.velo(0.5)
@@ -52,6 +54,7 @@ ColumnLayout {
         }
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             id: modeloTexto
             anchors.top: parent.top
             anchors.left: parent.left
@@ -77,6 +80,7 @@ ColumnLayout {
                 color: rend.p.tenue
             }
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: Math.round(grados) + "°C"
                 color: rend.p.texto
@@ -162,12 +166,14 @@ ColumnLayout {
         margen: 16
 
         Row {
+            id: filaDisco
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.topMargin: -6
             spacing: 14
 
             Aro {
+                id: aroDisco
                 anchors.verticalCenter: parent.verticalCenter
                 width: 108; height: 108
                 p: rend.p
@@ -183,12 +189,19 @@ ColumnLayout {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     text: "Disco"
                     color: rend.p.texto
                     font.pixelSize: 18
                     font.weight: Font.DemiBold
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
+                    // La monoespaciada es más ancha: con tope de ancho y encogiendo
+                    // si hace falta, "158.2 / 234 GiB" ya no se come el margen.
+                    width: Math.max(0, filaDisco.parent.width - aroDisco.width - filaDisco.spacing)
+                    fontSizeMode: Text.HorizontalFit
+                    minimumPixelSize: 9
                     text: rend.s.disco.usado
                           ? (rend.s.disco.usado / 1073741824).toFixed(1) + " / "
                             + (rend.s.disco.total / 1073741824).toFixed(0) + " GiB"
@@ -221,6 +234,7 @@ ColumnLayout {
                     color: rend.p.tenue
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: String(rend.s.disco.origen || "").replace("/dev/", "")
                     color: rend.p.texto
@@ -278,6 +292,7 @@ ColumnLayout {
                         color: rend.p.tenue
                     }
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         anchors.verticalCenter: parent.verticalCenter
                         text: rotulo
                         color: rend.p.tenue
@@ -286,6 +301,7 @@ ColumnLayout {
                 }
 
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     text: valor
@@ -331,6 +347,7 @@ ColumnLayout {
         }
 
         Text {
+            font.family: "JetBrainsMono Nerd Font"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             text: rend.s.ramGB.toFixed(1) + " / " + rend.s.ramTotalGB.toFixed(0) + " GiB"

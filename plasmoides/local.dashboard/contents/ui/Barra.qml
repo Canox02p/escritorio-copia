@@ -51,6 +51,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         visible: barra.tiempos
         anchors.left: parent.left
         anchors.top: riel.bottom
@@ -60,6 +61,7 @@ Item {
         font.pixelSize: 10
     }
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         visible: barra.tiempos
         anchors.right: parent.right
         anchors.top: riel.bottom

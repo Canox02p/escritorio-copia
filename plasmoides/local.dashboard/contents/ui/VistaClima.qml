@@ -46,6 +46,7 @@ ColumnLayout {
 
         extra: [
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 anchors.verticalCenter: parent.verticalCenter
                 text: clima.datos.lugar || ""
                 color: clima.p.tenue
@@ -72,12 +73,14 @@ ColumnLayout {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 2
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     text: clima.datos.temp !== undefined ? clima.datos.temp + "°C" : "—"
                     color: clima.p.texto
                     font.pixelSize: 34
                     font.weight: Font.Bold
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     text: clima.datos.desc || "Buscando el tiempo…"
                     color: clima.p.suave
                     font.pixelSize: 12
@@ -95,12 +98,14 @@ ColumnLayout {
                 property string valor: ""
                 spacing: 8
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: rotulo
                     color: clima.p.tenue
                     font.pixelSize: 10
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: valor
                     color: clima.p.texto
@@ -136,6 +141,7 @@ ColumnLayout {
                     spacing: 6
 
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: index === 0 ? "HOY" : clima.diaCorto(modelData.fecha).toUpperCase()
                         color: clima.p.tenue
@@ -155,12 +161,14 @@ ColumnLayout {
                         anchors.horizontalCenter: parent.horizontalCenter
                         spacing: 7
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             text: modelData.max + "°"
                             color: clima.p.texto
                             font.pixelSize: 14
                             font.weight: Font.DemiBold
                         }
                         Text {
+                            font.family: "JetBrainsMono Nerd Font"
                             text: modelData.min + "°"
                             color: clima.p.tenue
                             font.pixelSize: 13

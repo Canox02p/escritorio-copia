@@ -19,7 +19,6 @@ GridBorderActivate=5
 [Effect-translucency]
 ComboboxPopups=80
 Dialogs=82
-Inactive=90
 Menus=70
 MoveResize=72
 
@@ -101,6 +100,10 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 padding=4
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
+[Tiling][e4bcf5ef-0857-4542-bb30-3bc57bbab260][8cdbba76-bfe1-4f25-8b20-4ebda2b5e833]
+padding=4
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
 [Tiling][e4bcf5ef-0857-4542-bb30-3bc57bbab260][ba35d032-d730-4b34-8805-ebc67d734375]
 padding=4
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
@@ -124,6 +127,7 @@ ElectricBorderCooldown=125
 ElectricBorderCornerRatio=0.25
 ElectricBorderMaximize=true
 ElectricBorderTiling=true
+FocusStealingPreventionLevel=0
 SnapOnlyWhenOverlapping=false
 WindowSnapZone=15
 

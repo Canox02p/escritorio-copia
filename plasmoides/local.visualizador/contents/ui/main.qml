@@ -231,14 +231,16 @@ PlasmoidItem {
                     Layout.fillWidth: true
                     PlasmaComponents3.Label {
                         text: root.hayMusica ? root.tiempo(root.reproductor.position) : ""
-                        font: Kirigami.Theme.smallFont
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
                         color: p.tenue
                         opacity: 0.9
                     }
                     Item { Layout.fillWidth: true }
                     PlasmaComponents3.Label {
                         text: root.hayMusica ? root.tiempo(root.reproductor.length) : ""
-                        font: Kirigami.Theme.smallFont
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
                         color: p.tenue
                         opacity: 0.9
                     }

@@ -104,20 +104,22 @@ ColumnLayout {
         border.width: 1
         border.color: bat.p.borde
 
-        Kirigami.Icon {
-            id: rayo
+        // La misma pila dibujada de la tira (Bateria.qml), en grande y con la
+        // carga real. Mismas proporciones que en la tira (22×12): Bateria
+        // escala sola grosor, esquinas y borne con el alto.
+        Bateria {
+            id: marcoPila
             anchors.left: parent.left
             anchors.leftMargin: 18
             anchors.verticalCenter: parent.verticalCenter
-            width: 34; height: 34
-            source: bat.cargando ? "battery-full-charging-symbolic"
-                  : bat.enchufado ? "battery-full-charged-symbolic" : "battery-full-symbolic"
-            isMask: true
-            color: bat.p.acento
+            width: 40; height: 22
+            nivel: bat.carga
+            cargando: bat.cargando
+            tinta: bat.p.acento
         }
 
         Column {
-            anchors.left: rayo.right
+            anchors.left: marcoPila.right
             anchors.leftMargin: 18
             anchors.right: parent.right
             anchors.rightMargin: 18
@@ -127,6 +129,7 @@ ColumnLayout {
             Row {
                 spacing: 10
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: bat.carga + "%"
                     color: bat.p.texto
@@ -142,6 +145,7 @@ ColumnLayout {
                     border.width: 1
                     border.color: bat.p.borde
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         id: etiquetaEstado
                         anchors.centerIn: parent
                         text: bat.cargando ? "CARGANDO" : bat.enchufado ? "ENCHUFADO" : "CON BATERÍA"
@@ -196,6 +200,7 @@ ColumnLayout {
                     color: bat.p.acento
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: valor
                     color: bat.p.texto
@@ -203,6 +208,7 @@ ColumnLayout {
                     font.weight: Font.DemiBold
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: rotulo
                     color: bat.p.tenue
@@ -247,12 +253,14 @@ ColumnLayout {
                 property string v: ""
                 spacing: 6
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: k
                     color: bat.p.tenue
                     font.pixelSize: 10
                 }
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     anchors.verticalCenter: parent.verticalCenter
                     text: v
                     color: bat.p.texto
@@ -335,6 +343,7 @@ ColumnLayout {
                                 Behavior on color { ColorAnimation { duration: 180 } }
                             }
                             Text {
+                                font.family: "JetBrainsMono Nerd Font"
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: modo.modelData.texto
                                 color: modo.tinta

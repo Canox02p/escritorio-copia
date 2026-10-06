@@ -39,6 +39,7 @@ Item {
     }
 
     Text {
+        font.family: "JetBrainsMono Nerd Font"
         id: etiqueta
         anchors.centerIn: parent
         visible: pildora.icono === ""

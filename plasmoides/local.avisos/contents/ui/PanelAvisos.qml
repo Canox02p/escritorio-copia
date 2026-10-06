@@ -60,6 +60,7 @@ Item {
                 spacing: 8
 
                 Text {
+                    font.family: "JetBrainsMono Nerd Font"
                     Layout.fillWidth: true
                     text: "Notificaciones"
                     color: p.texto
@@ -73,6 +74,7 @@ Item {
                     radius: 10
                     color: avisos.cuantas > 0 ? p.acento : p.velo(0.1)
                     Text {
+                        font.family: "JetBrainsMono Nerd Font"
                         id: cuenta
                         anchors.centerIn: parent
                         text: avisos.cuantas
@@ -102,6 +104,7 @@ Item {
 
             // ---- Accesos rápidos ----
             Text {
+                font.family: "JetBrainsMono Nerd Font"
                 text: "ACCESOS RÁPIDOS"
                 color: p.tenue
                 font.pixelSize: 10
@@ -151,55 +154,58 @@ Item {
                 }
             }
 
-            // ---- Los dos botones anchos ----
+            // ---- Botones anchos ----
+            // `Ancho` se declara aquí fuera (y no dentro del RowLayout) para
+            // poder usarlo también en la fila de abajo.
+            component Ancho: Rectangle {
+                property string icono: ""
+                property string texto: ""
+                property bool alerta: false
+                signal pulsado()
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: 42
+                radius: 13
+                color: zonaAncho.containsMouse ? p.velo(0.13) : p.velo(0.06)
+                border.width: 1
+                border.color: p.borde
+                scale: zonaAncho.pressed ? 0.98 : 1
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Behavior on scale { NumberAnimation { duration: 90 } }
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 9
+                    Kirigami.Icon {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 16; height: 16
+                        source: icono
+                        isMask: true
+                        color: alerta ? "#e0605f" : p.texto
+                        opacity: 0.9
+                    }
+                    Text {
+                        font.family: "JetBrainsMono Nerd Font"
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: texto
+                        color: p.texto
+                        font.pixelSize: 12
+                        font.weight: Font.DemiBold
+                    }
+                }
+
+                MouseArea {
+                    id: zonaAncho
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: parent.pulsado()
+                }
+            }
+
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 8
-
-                component Ancho: Rectangle {
-                    property string icono: ""
-                    property string texto: ""
-                    property bool alerta: false
-                    signal pulsado()
-
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 42
-                    radius: 13
-                    color: zonaAncho.containsMouse ? p.velo(0.13) : p.velo(0.06)
-                    border.width: 1
-                    border.color: p.borde
-                    scale: zonaAncho.pressed ? 0.98 : 1
-                    Behavior on color { ColorAnimation { duration: 150 } }
-                    Behavior on scale { NumberAnimation { duration: 90 } }
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 9
-                        Kirigami.Icon {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 16; height: 16
-                            source: icono
-                            isMask: true
-                            color: alerta ? "#e0605f" : p.texto
-                            opacity: 0.9
-                        }
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: texto
-                            color: p.texto
-                            font.pixelSize: 12
-                            font.weight: Font.DemiBold
-                        }
-                    }
-
-                    MouseArea {
-                        id: zonaAncho
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: parent.pulsado()
-                    }
-                }
 
                 Ancho {
                     icono: "edit-delete"
@@ -214,6 +220,14 @@ Item {
                     // Abre el selector a pantalla completa (capa superpuesta).
                     onPulsado: root.correr("bash ~/.local/share/plasma/plasmoids/local.selectorfondos/contents/code/abrir.sh")
                 }
+            }
+
+            // Atajos de teclado, a lo ancho y debajo de Fondos.
+            Ancho {
+                icono: "preferences-desktop-keyboard-shortcuts-symbolic"
+                texto: "Atajos de teclado"
+                // Misma idea que Fondos: capa superpuesta a pantalla completa.
+                onPulsado: root.correr("bash ~/.local/share/plasma/plasmoids/local.avisos/contents/code/abrir-atajos.sh")
             }
         }
 }

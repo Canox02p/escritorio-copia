@@ -47,14 +47,13 @@ PlasmoidItem {
     // Wifi apagado y sin cable: el icono de internet se quita de la barra
     readonly property bool redVisible: modoAvion || hayEnlace || simboloRed.connecting || radios.wirelessEnabled
     // "network-wireless-80" → intensidad real de la señal
-    readonly property string iconoSenal: {
-        const n = parseInt((iconoPlasma.match(/(\d+)$/) || [0, 100])[1])
-        return "network-wireless-signal-" + (n >= 80 ? "excellent" : n >= 60 ? "good" : n >= 40 ? "ok" : n >= 20 ? "weak" : "none") + "-symbolic"
-    }
+    readonly property int senal: parseInt((iconoPlasma.match(/(\d+)$/) || [0, 100])[1])
+    // El wifi se DIBUJA con Wifi.qml. Los iconos de wifi de Papirus-Dark son un
+    // abanico macizo (un `path` con fill, sin arcos) y al teñirlos con isMask
+    // se leen como un rombo. Del tema solo se usan avión y cable.
+    readonly property bool wifiDibujado: !modoAvion && !(porCable && conectado)
     readonly property string iconoRed: modoAvion ? "network-flightmode-on-symbolic"
-                                       : simboloRed.connecting ? "network-wireless-acquiring-symbolic"
-                                       : conectado ? (porCable ? "network-wired-activated-symbolic" : iconoSenal)
-                                       : "network-wireless-disconnected-symbolic"   // sin conexión o sin internet
+                                       : "network-wired-activated-symbolic"
     readonly property string pistaRed: modoAvion ? "Modo avión"
                                        : conectado ? estadoRed.activeConnections
                                        : simboloRed.connecting ? "Conectando…"
@@ -120,6 +119,8 @@ PlasmoidItem {
             property string icono: ""
             property int pilaNivel: -1      // >= 0: dibuja la batería en vez del icono
             property bool pilaCargando: false
+            property int wifiNivel: -1      // >= 0: dibuja el wifi en vez del icono
+            property bool wifiConectado: true
             property string texto: ""
             property bool encendido: false
             property int destino: 0
@@ -136,7 +137,7 @@ PlasmoidItem {
 
                 Kirigami.Icon {
                     anchors.verticalCenter: parent.verticalCenter
-                    visible: trozo.pilaNivel < 0
+                    visible: trozo.pilaNivel < 0 && trozo.wifiNivel < 0
                     width: 14; height: 14
                     source: trozo.icono
                     isMask: true
@@ -144,6 +145,17 @@ PlasmoidItem {
                     opacity: toque.containsMouse ? 1 : (trozo.encendido ? 0.95 : 0.78)
                     Behavior on opacity { NumberAnimation { duration: 140 } }
                     Behavior on color { ColorAnimation { duration: 180 } }
+                }
+
+                Wifi {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: trozo.wifiNivel >= 0
+                    width: 15; height: 12
+                    nivel: trozo.wifiNivel
+                    conectado: trozo.wifiConectado
+                    tinta: paleta.acento
+                    opacity: toque.containsMouse ? 1 : 0.86
+                    Behavior on opacity { NumberAnimation { duration: 140 } }
                 }
 
                 Bateria {
@@ -191,6 +203,9 @@ PlasmoidItem {
             Trozo {
                 visible: root.redVisible
                 icono: root.iconoRed
+                wifiNivel: root.wifiDibujado ? root.senal : -1
+                // mientras conecta no se pinta el aspa, solo los arcos apagados
+                wifiConectado: root.conectado || simboloRed.connecting
                 destino: 0
                 pista: root.pistaRed
             }
@@ -234,7 +249,9 @@ PlasmoidItem {
         p: paleta
         dirCodigo: root.dirCodigo
         vista: root.seccion
-        onVistaChanged: root.seccion = vista
+        pilaNivel: root.carga
+        pilaCargando: root.cargando
+        onElegir: (i) => root.seccion = i
         onCerrar: root.expanded = false
     }
 }
